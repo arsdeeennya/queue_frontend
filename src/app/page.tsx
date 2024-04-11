@@ -11,15 +11,17 @@ import { useGetJobs } from '@/hooks/useGetJobs';
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { jobs, isError, isLoading } = useGetJobs();
-
   // if (error) return <div>failed to load</div>;
   // if (isLoading) return <div>loading...</div>;
   // return <div>hello {data.name}!</div>;
+  if (!jobs) return <>loading...</>;
+  console.log(jobs.data);
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-col items-center justify-center space-y-4">
-        {[...Array(10)].map((_, index) => (
-          <JobCard key={index} index={index} setIsModalOpen={setIsModalOpen} />
+        {jobs.data.map((job: any, index: number) => (
+          <JobCard key={index} job={job} />
         ))}
       </div>
       <RecruitmentButton />
