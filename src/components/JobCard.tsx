@@ -3,10 +3,8 @@
 import React from 'react';
 
 const JobCard = ({
-  key,
   job,
 }: {
-  key: number;
   job: {
     date: number;
     place: string;

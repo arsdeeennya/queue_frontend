@@ -21,7 +21,9 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-col items-center justify-center space-y-4">
         {jobs.data.map((job: any, index: number) => (
-          <JobCard key={index} job={job} />
+          <div key={index}>
+            <JobCard job={job} />
+          </div>
         ))}
       </div>
       <RecruitmentButton />
