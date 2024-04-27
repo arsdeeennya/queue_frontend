@@ -9,24 +9,44 @@ import useSWR from 'swr';
 import { useGetJobs } from '@/hooks/useGetJobs';
 
 export default function Home() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { jobs, isError, isLoading } = useGetJobs();
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const { jobs, isError, isLoading } = useGetJobs();
+
   // if (error) return <div>failed to load</div>;
   // if (isLoading) return <div>loading...</div>;
   // return <div>hello {data.name}!</div>;
-  if (!jobs) return <>loading...</>;
-  console.log(jobs.data);
+  // console.log(jobs);
+  // if (!jobs) return <>loading...</>;
+
+  // const aaa = async () => {
+  //   await setTimeout(() => {
+  //     // 5秒後に実行する処理を記述する
+  //     console.log('end');
+  //   }, 3000);
+  // };
+  // aaa();
+  // console.log('start');
+
+  function sleep(ms: number): Promise<void> {
+    return new Promise(() => setTimeout(() => {}, ms));
+  }
+
+  sleep(3).then(() => {
+    console.log(10);
+  });
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <div className="flex flex-col items-center justify-center space-y-4">
-        {jobs.data.map((job: any, index: number) => (
+        {/* {jobs.data} */}
+        {/* {jobs.data.map((job: any, index: number) => (
           <div key={index}>
             <JobCard job={job} />
           </div>
-        ))}
+        ))} */}
+        33333
       </div>
-      <RecruitmentButton />
+      {/* <RecruitmentButton /> */}
       {/* <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <CreditCardForm />
       </Modal> */}
