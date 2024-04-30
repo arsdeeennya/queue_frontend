@@ -37,6 +37,17 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime
   nickName       String?
+  Chat           Chat[]
   Job            Job[]
   Task           Task[]
+}
+
+model Chat {
+  id        Int      @id @default(autoincrement())
+  roomNum   Int
+  text      String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

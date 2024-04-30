@@ -88,6 +88,7 @@ export default function RootLayout({
             </a> */}
             </div>
             <div>
+              {/* TODO サーバーサイドから返されるレスポンスに、ログイン状態を示すトークンやフラグを含めることが一般的です。フロントエンドはこのトークンやフラグを受け取り、それを使用してログイン状態を判断します。 */}
               {!cookie ? (
                 <Link
                   href="/login"
