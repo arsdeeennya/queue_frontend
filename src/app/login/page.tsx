@@ -1,80 +1,32 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
+'use client';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from 'axios';
+import Link from 'next/link';
+
 export default function Example() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<any>();
+
+  const onSubmit: SubmitHandler<any> = async data => {
+    try {
+      const response = await axios.post('http://localhost:3001/auth/login', {
+        email: data.email,
+        password: data.password,
+      });
+      console.log('ログイン成功:', response.data);
+      // ログイン成功後の処理をここに記述
+      window.location.href = '/';
+    } catch (error) {
+      console.error('ログイン失敗:', error);
+    }
+    console.log(data);
+  };
+
   return (
     <>
-      <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6 sticky top-0">
-        <div className="flex items-center flex-shrink-0 text-white mr-6">
-          <svg
-            className="fill-current h-8 w-8 mr-2"
-            width="54"
-            height="54"
-            viewBox="0 0 54 54"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" />
-          </svg>
-          <a href="/">
-            <span className="font-semibold text-xl tracking-tight">
-              並び代行マッチングサービス
-            </span>
-          </a>
-        </div>
-        <div className="block lg:hidden">
-          <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-            <svg
-              className="fill-current h-3 w-3"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-            </svg>
-          </button>
-        </div>
-        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-          <div className="text-sm lg:flex-grow">
-            {/* <a
-              href="#responsive-header"
-              className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-            >
-              Docs
-            </a>
-            <a
-              href="#responsive-header"
-              className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-            >
-              Examples
-            </a>
-            <a
-              href="#responsive-header"
-              className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
-            >
-              Blog
-            </a> */}
-          </div>
-          <div>
-            <a
-              href="/login"
-              className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-            >
-              ログイン
-            </a>
-          </div>
-        </div>
-      </nav>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 h-screen w-screen flex justify-center items-center">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img
@@ -88,7 +40,7 @@ export default function Example() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
               <label
                 htmlFor="email"
@@ -98,11 +50,11 @@ export default function Example() {
               </label>
               <div className="mt-2">
                 <input
+                  {...register('email', { required: true })}
                   id="email"
-                  name="email"
                   type="email"
                   autoComplete="email"
-                  required
+                  value="user1@test.com"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -117,21 +69,21 @@ export default function Example() {
                   パスワード
                 </label>
                 <div className="text-sm">
-                  <a
+                  <Link
                     href="#"
                     className="font-semibold text-indigo-600 hover:text-indigo-500"
                   >
                     パスワードを忘れましたか?
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="mt-2">
                 <input
+                  {...register('password', { required: true })}
                   id="password"
-                  name="password"
                   type="password"
                   autoComplete="current-password"
-                  required
+                  value="user1"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>

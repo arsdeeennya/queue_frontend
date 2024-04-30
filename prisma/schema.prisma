@@ -8,15 +8,16 @@ datasource db {
 }
 
 model Job {
-  id           Int      @id @default(autoincrement())
-  name         String
-  price        Int
-  location     String
-  queueingTime Int
-  description  String?
-  userId       Int
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime
+  id          Int      @id @default(autoincrement())
+  price       Int
+  location    String
+  description String?
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+  endDate     DateTime
+  startDate   DateTime
+  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Task {
@@ -36,5 +37,6 @@ model User {
   createdAt      DateTime @default(now())
   updatedAt      DateTime
   nickName       String?
+  Job            Job[]
   Task           Task[]
 }
