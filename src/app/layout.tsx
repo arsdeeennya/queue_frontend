@@ -34,6 +34,14 @@ export default function RootLayout({
       setCookie(Cookies.get('access_token'));
     }
   }, []);
+
+  const onSubmit = async () => {
+    try {
+      await axios.post('http://localhost:3001/auth/logout');
+      window.location.href = '/login';
+    } catch (error) {}
+  };
+
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -98,10 +106,7 @@ export default function RootLayout({
                 </Link>
               ) : (
                 <button
-                  onClick={() => {
-                    Cookies.remove('access_token');
-                    window.location.href = '/login';
-                  }}
+                  onClick={() => onSubmit()}
                   className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
                 >
                   ログアウト
