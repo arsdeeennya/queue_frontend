@@ -7,7 +7,6 @@ export function useGetChats() {
     return res;
   };
   const { data, error, isLoading } = useSWR<any>(`chats`, fetcher);
-  console.log(data, 11111);
 
   return {
     chats: data,

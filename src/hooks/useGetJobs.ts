@@ -7,7 +7,6 @@ export function useGetJobs() {
     return res;
   };
   const { data, error, isLoading } = useSWR<any>(`jobs`, fetcher);
-  console.log(data, 11111);
 
   return {
     jobs: data,

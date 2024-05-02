@@ -17,10 +17,12 @@ import {
   getYear,
 } from 'date-fns';
 import Link from 'next/link';
+import { useGetUser } from '@/hooks/useGetUser';
 
 export default function Home() {
   // const [isModalOpen, setIsModalOpen] = useState(false);
   const { jobs, isError, isLoading } = useGetJobs();
+  const { user } = useGetUser();
 
   if (isError) return <div>failed to load</div>;
   if (isLoading)
@@ -30,7 +32,6 @@ export default function Home() {
       </div>
     );
   // return <div>hello {jobs.name}!</div>;
-  console.log(jobs.data);
   if (!jobs) return <>loading...</>;
 
   return (
@@ -59,11 +60,15 @@ export default function Home() {
                 <div className="px-6 py-4">
                   <div className="flex flex-row justify-between">
                     <div className="font-bold text-xl mb-2">{job.location}</div>
-                    <Link href="/chat">
-                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
-                        応募
-                      </button>
-                    </Link>
+                    {!user || user.data.id === job.userId ? (
+                      <Link href="/chat">
+                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">
+                          応募
+                        </button>
+                      </Link>
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                   <div className="pb-2">
                     <div className="rounded-full py-1 text-sm font-semibold text-gray-700">

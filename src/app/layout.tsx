@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
+import { useGetUser } from '@/hooks/useGetUser';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -21,6 +22,8 @@ export default function RootLayout({
 }>) {
   axios.defaults.withCredentials = true;
   const [cookie, setCookie] = useState<any>();
+  const { user, isError, isLoading } = useGetUser();
+
   useEffect(() => {
     const getCsrfToken = async () => {
       const { data } = await axios.get(
@@ -38,7 +41,6 @@ export default function RootLayout({
   const onSubmit = async () => {
     try {
       await axios.post('http://localhost:3001/auth/logout');
-      window.location.href = '/login';
     } catch (error) {}
   };
 
@@ -97,20 +99,22 @@ export default function RootLayout({
             </div>
             <div>
               {/* TODO サーバーサイドから返されるレスポンスに、ログイン状態を示すトークンやフラグを含めることが一般的です。フロントエンドはこのトークンやフラグを受け取り、それを使用してログイン状態を判断します。 */}
-              {!cookie ? (
+              {cookie ? (
+                <div onClick={() => onSubmit()}>
+                  <Link
+                    className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
+                    href="/login"
+                  >
+                    ログアウト
+                  </Link>
+                </div>
+              ) : (
                 <Link
                   href="/login"
-                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500   hover:bg-white mt-4 lg:mt-0"
+                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
                 >
                   ログイン
                 </Link>
-              ) : (
-                <button
-                  onClick={() => onSubmit()}
-                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-                >
-                  ログアウト
-                </button>
               )}
             </div>
           </div>

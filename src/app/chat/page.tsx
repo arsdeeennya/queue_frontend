@@ -27,7 +27,6 @@ export default function Example() {
       </div>
     );
   // return <div>hello {jobs.name}!</div>;
-  console.log(chats.data);
   if (!chats) return <>loading...</>;
   return (
     <>

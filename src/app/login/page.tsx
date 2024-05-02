@@ -16,13 +16,8 @@ export default function Example() {
         email: data.email,
         password: data.password,
       });
-      console.log('ログイン成功:', response.data);
       // ログイン成功後の処理をここに記述
-      window.location.href = '/';
-    } catch (error) {
-      console.error('ログイン失敗:', error);
-    }
-    console.log(data);
+    } catch (error) {}
   };
 
   return (
