@@ -14,7 +14,7 @@
 */
 'use client';
 
-import { useGetChats } from '@/hooks/useGetChats';
+import { useGetChats } from '@/app/hooks/useGetChats';
 
 export default function Example() {
   const { chats, isError, isLoading } = useGetChats();
