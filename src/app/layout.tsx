@@ -7,6 +7,7 @@ import axios from 'axios';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { useGetUser } from '@/app/hooks/useGetUser';
+import Header from './components/Header/Header';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -24,6 +25,7 @@ export default function RootLayout({
   const [cookie, setCookie] = useState<any>();
   const { user, isError, isLoading } = useGetUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
   useEffect(() => {
     const getCsrfToken = async () => {
@@ -48,197 +50,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6 sticky top-0">
-          <div className="flex items-center flex-shrink-0 text-white mr-6">
-            <svg
-              className="fill-current h-8 w-8 mr-2"
-              width="54"
-              height="54"
-              viewBox="0 0 54 54"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path d="M13.5 22.1c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05zM0 38.3c1.8-7.2 6.3-10.8 13.5-10.8 10.8 0 12.15 8.1 17.55 9.45 3.6.9 6.75-.45 9.45-4.05-1.8 7.2-6.3 10.8-13.5 10.8-10.8 0-12.15-8.1-17.55-9.45-3.6-.9-6.75.45-9.45 4.05z" />
-            </svg>
-            <Link href="/">
-              <span className="font-semibold text-xl tracking-tight">
-                並び代行マッチングサービス
-              </span>
-            </Link>
-          </div>
-          <div className="block lg:hidden">
-            <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-              <svg
-                className="fill-current h-3 w-3"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <title>Menu</title>
-                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-              </svg>
-            </button>
-          </div>
-          <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-            <div className="text-sm lg:flex-grow">
-              {/* <a
-              href="#responsive-header"
-              className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-            >
-              Docs
-            </a>
-            <a
-              href="#responsive-header"
-              className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-            >
-              Examples
-            </a>
-            <a
-              href="#responsive-header"
-              className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
-            >
-              Blog
-            </a> */}
-            </div>
-            <div>
-              {/* TODO サーバーサイドから返されるレスポンスに、ログイン状態を示すトークンやフラグを含めることが一般的です。フロントエンドはこのトークンやフラグを受け取り、それを使用してログイン状態を判断します。 */}
-              {cookie ? (
-                <div onClick={() => onSubmit()}>
-                  <Link
-                    className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-                    href="/login"
-                  >
-                    ログアウト
-                  </Link>
-                </div>
-              ) : (
-                <div
-                  onClick={() => setIsModalOpen(true)}
-                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-                >
-                  ログイン
-                </div>
-              )}
-            </div>
-          </div>
-        </nav>
+        <Header />
+
         {children}
-        {isModalOpen && (
-          <div
-            id="authentication-modal"
-            aria-hidden="true"
-            className="overflow-x-hidden overflow-y-auto fixed inset-0 z-50 flex justify-center items-center bg-gray-500 bg-opacity-75"
-            onClick={() => setIsModalOpen(false)} // モーダルの外側をクリックしたときにモーダルを閉じる
-          >
-            <div
-              className="relative w-full max-w-md p-4 h-auto"
-              onClick={e => e.stopPropagation()} // モーダルの内容部分のクリックイベントが外側に伝播しないようにする
-            >
-              <div className="bg-white rounded-lg shadow relative dark:bg-gray-700">
-                <div className="flex justify-end p-2">
-                  <button
-                    type="button"
-                    className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
-                    data-modal-toggle="authentication-modal"
-                    onClick={() => setIsModalOpen(false)}
-                  >
-                    <svg
-                      className="w-5 h-5"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                        clip-rule="evenodd"
-                      ></path>
-                    </svg>
-                  </button>
-                </div>
-                <form
-                  className="space-y-6 px-6 lg:px-8 pb-4 sm:pb-6 xl:pb-8"
-                  action="#"
-                >
-                  <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                    ログインして応募する
-                  </h3>
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300"
-                    >
-                      メールアドレス
-                    </label>
-                    <input
-                      type="email"
-                      name="email"
-                      id="email"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      placeholder="name@company.com"
-                      required={true}
-                    />
-                  </div>
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="text-sm font-medium text-gray-900 block mb-2 dark:text-gray-300"
-                    >
-                      パスワード
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      id="password"
-                      placeholder="••••••••"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      required={true}
-                    />
-                  </div>
-                  {/* <div className="flex justify-between">
-                    <div className="flex items-start">
-                      <div className="flex items-center h-5">
-                        <input
-                          id="remember"
-                          aria-describedby="remember"
-                          type="checkbox"
-                          className="bg-gray-50 border border-gray-300 focus:ring-3 focus:ring-blue-300 h-4 w-4 rounded dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
-                          required={true}
-                        />
-                      </div>
-                      <div className="text-sm ml-3">
-                        <label
-                          htmlFor="remember"
-                          className="font-medium text-gray-900 dark:text-gray-300"
-                        >
-                          パスワードを記憶
-                        </label>
-                      </div>
-                    </div>
-                    <a
-                      href="#"
-                      className="text-sm text-blue-700 hover:underline dark:text-blue-500"
-                    >
-                      パスワードを忘れた方はこちら
-                    </a>
-                  </div> */}
-                  <button
-                    type="submit"
-                    className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >
-                    ログインする
-                  </button>
-                  <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                    <a
-                      href="#"
-                      className="text-blue-700 hover:underline dark:text-blue-500"
-                    >
-                      会員登録はこちら
-                    </a>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        )}
       </body>
     </html>
   );
