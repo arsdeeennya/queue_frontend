@@ -4,6 +4,9 @@ import axios from 'axios';
 import LoginModal from '../Modal/LoginModal';
 import { useGetUser } from '@/app/hooks/useGetUser';
 import RecruitModal from '../Modal/RecruitModal';
+import { TbBell } from 'react-icons/tb';
+import { TbBellPlus } from 'react-icons/tb';
+import { FiAlertCircle } from 'react-icons/fi';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -61,10 +64,19 @@ const Header = () => {
                 <div className="flex justify-end">
                   <div
                     onClick={() => setIsRecruitModalOpen(true)}
-                    className="text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
+                    className="cursor-pointer text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
                   >
                     並べる人を募集する
                   </div>
+                  <button className="relative inline-flex items-center justify-center mr-5">
+                    <TbBell size="30" fill="white" />
+                  </button>
+                  <button className="relative inline-flex items-center justify-center mr-5">
+                    <TbBell size="30" fill="red" />
+                    <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                      <FiAlertCircle size="14" />
+                    </span>
+                  </button>
                   <button
                     id="dropdownDefaultButton"
                     data-dropdown-toggle="dropdown"
@@ -109,13 +121,13 @@ const Header = () => {
               <>
                 <div
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
+                  className="cursor-pointer text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
                 >
                   並べる人を募集する
                 </div>
                 <div
                   onClick={() => setIsLoginModalOpen(true)}
-                  className="inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
+                  className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
                 >
                   ログイン
                 </div>

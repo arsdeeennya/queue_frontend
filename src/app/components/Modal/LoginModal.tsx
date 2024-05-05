@@ -173,7 +173,7 @@ const LoginModal = ({
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                   <div
                     onClick={() => setIsRegister(!isRegister)}
-                    className="text-blue-700 hover:underline dark:text-blue-500"
+                    className="cursor-pointer text-blue-700 hover:underline dark:text-blue-500"
                   >
                     {isRegister ? 'ログイン' : '会員登録'}はこちら
                   </div>
