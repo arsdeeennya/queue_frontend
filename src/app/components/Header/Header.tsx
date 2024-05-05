@@ -1,18 +1,37 @@
 import Link from 'next/link';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import LoginModal from '../Modal/LoginModal';
+import { useGetUser } from '@/app/hooks/useGetUser';
+import RecruitModal from '../Modal/RecruitModal';
 
 const Header = () => {
-  const [cookie, setCookie] = useState<any>();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRecruitModalOpen, setIsRecruitModalOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const onSubmit = async () => {
     try {
       await axios.post('http://localhost:3001/auth/logout');
     } catch (error) {}
   };
+  const { user, isLoading } = useGetUser();
+  console.log(user, 333333);
+
+  useEffect(() => {
+    const closeDropdown = (event: any) => {
+      if (!event.target.closest('#dropdownDefaultButton')) {
+        setDropdownOpen(false);
+      }
+    };
+
+    if (dropdownOpen) {
+      window.addEventListener('click', closeDropdown);
+    }
+
+    return () => {
+      window.removeEventListener('click', closeDropdown);
+    };
+  }, [dropdownOpen]);
 
   return (
     <>
@@ -33,62 +52,86 @@ const Header = () => {
             </span>
           </Link>
         </div>
-        <div className="block lg:hidden">
-          <button className="flex items-center px-3 py-2 border rounded text-teal-200 border-teal-400 hover:text-white hover:border-white">
-            <svg
-              className="fill-current h-3 w-3"
-              viewBox="0 0 20 20"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <title>Menu</title>
-              <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" />
-            </svg>
-          </button>
-        </div>
-        <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
-          <div className="text-sm lg:flex-grow">
-            {/* <a
-      href="#responsive-header"
-      className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-    >
-      Docs
-    </a>
-    <a
-      href="#responsive-header"
-      className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white mr-4"
-    >
-      Examples
-    </a>
-    <a
-      href="#responsive-header"
-      className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white"
-    >
-      Blog
-    </a> */}
-          </div>
+
+        <div>
+          <div className="text-sm lg:flex-grow"></div>
           <div>
-            {/* TODO サーバーサイドから返されるレスポンスに、ログイン状態を示すトークンやフラグを含めることが一般的です。フロントエンドはこのトークンやフラグを受け取り、それを使用してログイン状態を判断します。 */}
-            {cookie ? (
-              <div onClick={() => onSubmit()}>
-                <Link
-                  className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-                  href="/login"
-                >
-                  ログアウト
-                </Link>
-              </div>
+            {user ? (
+              <>
+                <div className="flex justify-end">
+                  <div
+                    onClick={() => setIsRecruitModalOpen(true)}
+                    className="text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
+                  >
+                    並べる人を募集する
+                  </div>
+                  <button
+                    id="dropdownDefaultButton"
+                    data-dropdown-toggle="dropdown"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    type="button"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                  >
+                    {user.data.nickName}
+                  </button>
+                </div>
+
+                {dropdownOpen && (
+                  <div
+                    id="dropdown"
+                    className="z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 mt-4 fixed right-4"
+                  >
+                    <ul
+                      className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                      aria-labelledby="dropdownDefaultButton"
+                    >
+                      <li>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          通知
+                        </a>
+                      </li>
+                      <li>
+                        <div
+                          onClick={onSubmit}
+                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                          ログアウト
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </>
             ) : (
-              <div
-                onClick={() => setIsModalOpen(true)}
-                className="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0"
-              >
-                ログイン
-              </div>
+              <>
+                <div
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
+                >
+                  並べる人を募集する
+                </div>
+                <div
+                  onClick={() => setIsLoginModalOpen(true)}
+                  className="inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
+                >
+                  ログイン
+                </div>
+              </>
             )}
           </div>
         </div>
       </nav>
-      <LoginModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <LoginModal
+        isModalOpen={isLoginModalOpen}
+        setIsModalOpen={setIsLoginModalOpen}
+      />
+      <RecruitModal
+        isModalOpen={isRecruitModalOpen}
+        setIsModalOpen={setIsRecruitModalOpen}
+      />
     </>
   );
 };

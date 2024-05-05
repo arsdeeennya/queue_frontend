@@ -6,7 +6,7 @@ export function useGetChats() {
     const res = await axios.get('http://localhost:3001/chat');
     return res;
   };
-  const { data, error, isLoading } = useSWR<any>(`chats`, fetcher);
+  const { data, error, isLoading } = useSWR<any>(`/chat`, fetcher);
 
   return {
     chats: data,

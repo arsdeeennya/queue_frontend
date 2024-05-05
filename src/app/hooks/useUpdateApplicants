@@ -1,0 +1,23 @@
+import useSWR from 'swr';
+import axios from 'axios';
+
+export function useUpdateApplicants() {
+  const fetcher = async userId => {
+    const res = await axios.patch('http://localhost:3001/job', userId);
+    return res;
+  };
+  // async (task: EditedTask) => {
+  //   const res = await axios.patch(
+  //     `${process.env.NEXT_PUBLIC_API_URL}/todo/${task.id}`,
+  //     task
+  //   )
+  //   return res.data
+  // },
+  const { data, error, isLoading } = useSWR<any>(`jobs`, fetcher);
+
+  return {
+    jobs: data,
+    isLoading,
+    isError: error,
+  };
+}

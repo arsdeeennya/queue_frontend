@@ -15,7 +15,7 @@ export default function Example() {
       const response = await axios.post('http://localhost:3001/auth/login', {
         email: data.email,
         password: data.password,
-      });
+      }); 
       // ログイン成功後の処理をここに記述
     } catch (error) {}
   };

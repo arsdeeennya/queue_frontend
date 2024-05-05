@@ -20,12 +20,13 @@ import Link from 'next/link';
 import { useGetUser } from '@/app/hooks/useGetUser';
 import LoginModal from '../components/Modal/LoginModal';
 // import Modal from '@/components/Modal'; // モーダルコンポーネントのインポート
+import axios from 'axios';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { jobs, isError, isLoading } = useGetJobs();
-  const { user } = useGetUser();
   const [isRegister, setIsRegister] = useState(false);
+  const { jobs, isError, isLoading } = useGetJobs();
+  const { user, isLoading: isLoadingUser } = useGetUser();
 
   if (isError) return <div>failed to load</div>;
   if (isLoading)
@@ -34,7 +35,40 @@ export default function Home() {
         <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
       </div>
     );
-  if (!jobs) return <>loading...</>;
+  if (!jobs || isLoadingUser) return <>loading...</>;
+
+  const handlePatchRequest = async (jobId: number) => {
+    if (user && user.data && user.data.id) {
+      try {
+        const res = await axios.patch('http://localhost:3001/job', {
+          jobId: jobId,
+        });
+        console.log('成功:', res);
+      } catch (error) {
+        console.error('エラー:', error);
+      }
+    } else {
+      console.log('ユーザーがログインしていません。');
+    }
+  };
+
+  const handleDeleteRequest = async (jobId: number) => {
+    console.log('jobId', jobId);
+    if (user && user.data && user.data.id) {
+      try {
+        const res = await axios.delete(`http://localhost:3001/job`, {
+          data: {
+            jobId: jobId,
+          },
+        });
+        console.log('削除成功:', res);
+      } catch (error) {
+        console.error('削除エラー:', error);
+      }
+    } else {
+      console.log('ユーザーがログインしていません。');
+    }
+  };
 
   return (
     <>
@@ -49,16 +83,32 @@ export default function Home() {
                 <div className="px-6 py-4">
                   <div className="flex flex-row justify-between">
                     <div className="font-bold text-xl mb-2">{job.location}</div>
-                    {!user || user.data.id === job.userId ? (
+                    {user && user.data.id === job.userId ? (
+                      <div className="flex items-center">
+                        <button
+                          className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded"
+                          onClick={() => handleDeleteRequest(job.id)}
+                        >
+                          削除する
+                        </button>
+                      </div>
+                    ) : !user ? (
                       <div
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
                         onClick={() => setIsModalOpen(true)}
                       >
-                        応募する
+                        ここに並ぶ
+                      </div>
+                    ) : job.applicants.includes(user.data.id) ? (
+                      <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                        応募済
                       </div>
                     ) : (
-                      <div className="text-black font-bold italic">
-                        あなたの投稿
+                      <div
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                        onClick={() => handlePatchRequest(job.id)}
+                      >
+                        ここに並ぶ
                       </div>
                     )}
                   </div>

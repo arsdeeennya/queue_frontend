@@ -1,4 +1,7 @@
+import axios from 'axios';
+import Link from 'next/link';
 import React, { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 const LoginModal = ({
   isModalOpen,
@@ -9,7 +12,32 @@ const LoginModal = ({
 }) => {
   const [cookie, setCookie] = useState<any>();
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isRegister, setIsRegister] = useState(false);
+  const [isRegister, setIsRegister] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<any>();
+
+  const onSubmit: SubmitHandler<any> = async data => {
+    try {
+      if (isRegister) {
+        await axios.post('http://localhost:3001/auth/signup', {
+          email: data.email,
+          password: data.password,
+          nickName: data.nickName,
+        });
+      } else {
+        await axios.post('http://localhost:3001/auth/login', {
+          email: data.email,
+          password: data.password,
+        });
+      }
+      // ログイン成功後の処理をここに記述
+    } catch (error) {
+      console.log(error, 444444);
+    }
+  };
 
   return (
     <>
@@ -48,7 +76,7 @@ const LoginModal = ({
               </div>
               <form
                 className="space-y-6 px-6 lg:px-8 pb-4 sm:pb-6 xl:pb-8"
-                action="#"
+                onSubmit={handleSubmit(onSubmit)}
               >
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white">
                   {isRegister ? '会員登録' : 'ログイン'}する
@@ -61,9 +89,11 @@ const LoginModal = ({
                     メールアドレス
                   </label>
                   <input
+                    {...register('email', { required: true })}
                     type="email"
                     name="email"
                     id="email"
+                    // value="fdsifjadsf@test.com"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="name@company.com"
                     required={true}
@@ -77,10 +107,12 @@ const LoginModal = ({
                     パスワード
                   </label>
                   <input
+                    {...register('password', { required: true })}
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
+                    value="user1"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required={true}
                   />
@@ -94,9 +126,10 @@ const LoginModal = ({
                       ユーザー名
                     </label>
                     <input
-                      type="password"
-                      name="password"
-                      id="password"
+                      {...register('nickName', { required: true })}
+                      type="text"
+                      name="nickName"
+                      id="nickName"
                       placeholder="サービス内で利用する名前"
                       className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                       required={true}
@@ -138,12 +171,12 @@ const LoginModal = ({
                   {isRegister ? '会員登録する' : 'ログインする'}
                 </button>
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-                  <button
+                  <div
                     onClick={() => setIsRegister(!isRegister)}
                     className="text-blue-700 hover:underline dark:text-blue-500"
                   >
                     {isRegister ? 'ログイン' : '会員登録'}はこちら
-                  </button>
+                  </div>
                 </div>
               </form>
             </div>

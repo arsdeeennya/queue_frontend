@@ -17,6 +17,7 @@ model Job {
   updatedAt   DateTime
   endDate     DateTime
   startDate   DateTime
+  applicants  Int[]
   User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
