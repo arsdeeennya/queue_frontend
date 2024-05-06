@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -7,17 +8,22 @@ import RecruitModal from '../Modal/RecruitModal';
 import { TbBell } from 'react-icons/tb';
 import { TbBellPlus } from 'react-icons/tb';
 import { FiAlertCircle } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRecruitModalOpen, setIsRecruitModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
+
   const onSubmit = async () => {
     try {
       await axios.post('http://localhost:3001/auth/logout');
+      mutate(null);
+      router.push('/');
     } catch (error) {}
   };
-  const { user, isLoading } = useGetUser();
+  const { user, isLoading, mutate } = useGetUser();
   console.log(user, 333333);
 
   useEffect(() => {
@@ -68,15 +74,21 @@ const Header = () => {
                   >
                     並べる人を募集する
                   </div>
-                  <button className="relative inline-flex items-center justify-center mr-5">
+                  <Link
+                    href="/notice"
+                    className="relative inline-flex items-center justify-center mr-5"
+                  >
                     <TbBell size="30" fill="white" />
-                  </button>
-                  <button className="relative inline-flex items-center justify-center mr-5">
+                  </Link>
+                  <Link
+                    href="/notice"
+                    className="relative inline-flex items-center justify-center mr-5"
+                  >
                     <TbBell size="30" fill="red" />
                     <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
                       <FiAlertCircle size="14" />
                     </span>
-                  </button>
+                  </Link>
                   <button
                     id="dropdownDefaultButton"
                     data-dropdown-toggle="dropdown"

@@ -1,3 +1,4 @@
+import { useGetJobs } from '@/app/hooks/useGetJobs';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,6 +16,8 @@ const RecruitModal = ({
     formState: { errors },
   } = useForm<any>();
 
+  const { mutate } = useGetJobs();
+
   const onSubmit: SubmitHandler<any> = async data => {
     try {
       console.log(data);
@@ -26,6 +29,8 @@ const RecruitModal = ({
         endDate: new Date(data.endDate).toISOString(),
       });
       // 募集成功後の処理をここに記述
+      mutate();
+      setIsModalOpen(false);
     } catch (error) {
       console.log(error);
     }

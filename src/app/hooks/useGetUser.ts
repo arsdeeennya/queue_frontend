@@ -6,7 +6,7 @@ export function useGetUser() {
     const res = await axios.get('http://localhost:3001/user');
     return res;
   };
-  const { data, error, isLoading } = useSWR<any>(`/user`, fetcher, {
+  const { data, error, isLoading, mutate } = useSWR<any>(`/user`, fetcher, {
     onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
       // 404では再試行しない。
       if (error.status === 401) return;
@@ -27,5 +27,6 @@ export function useGetUser() {
     user: data,
     isLoading,
     isError: error,
+    mutate,
   };
 }

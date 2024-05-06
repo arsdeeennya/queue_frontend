@@ -6,11 +6,12 @@ export function useGetJobs() {
     const res = await axios.get('http://localhost:3001/job');
     return res;
   };
-  const { data, error, isLoading } = useSWR<any>(`/job`, fetcher);
+  const { data, error, isLoading, mutate } = useSWR<any>(`/job`, fetcher);
 
   return {
     jobs: data,
     isLoading,
     isError: error,
+    mutate,
   };
 }

@@ -1,3 +1,4 @@
+import { useGetUser } from '@/app/hooks/useGetUser';
 import axios from 'axios';
 import Link from 'next/link';
 import React, { useState } from 'react';
@@ -18,6 +19,7 @@ const LoginModal = ({
     handleSubmit,
     formState: { errors },
   } = useForm<any>();
+  const { user, isLoading, mutate } = useGetUser();
 
   const onSubmit: SubmitHandler<any> = async data => {
     try {
@@ -27,13 +29,19 @@ const LoginModal = ({
           password: data.password,
           nickName: data.nickName,
         });
+        await axios.post('http://localhost:3001/auth/login', {
+          email: data.email,
+          password: data.password,
+        });
       } else {
         await axios.post('http://localhost:3001/auth/login', {
           email: data.email,
           password: data.password,
         });
       }
-      // ログイン成功後の処理をここに記述
+      // ログイン成功後の処理をここに記述[
+      mutate();
+      setIsModalOpen(false);
     } catch (error) {
       console.log(error, 444444);
     }
