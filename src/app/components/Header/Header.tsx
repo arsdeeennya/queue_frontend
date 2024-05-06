@@ -64,88 +64,103 @@ const Header = () => {
 
         <div>
           <div className="text-sm lg:flex-grow"></div>
-          <div>
-            {user ? (
-              <>
-                <div className="flex justify-end">
+          {isLoading ? (
+            <div
+              className="flex justify-center items-center"
+              aria-label="読み込み中"
+            >
+              <div className="animate-spin h-10 w-10 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+            </div>
+          ) : (
+            <div>
+              {user ? (
+                <>
+                  <div className="flex justify-end">
+                    <div
+                      onClick={() => setIsRecruitModalOpen(true)}
+                      className="cursor-pointer text-white bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 dark:focus:ring-blue-800 mr-4"
+                    >
+                      並べる人を募集する
+                    </div>
+                    <Link
+                      href="/notice"
+                      className="relative inline-flex items-center justify-center mr-5"
+                    >
+                      <TbBell size="30" fill="white" />
+                    </Link>
+                    {/* <Link
+                      href="/notice"
+                      className="relative inline-flex items-center justify-center mr-5"
+                    >
+                      <TbBell size="30" fill="red" />
+                      <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                        <FiAlertCircle size="14" />
+                      </span>
+                    </Link> */}
+                    {/* <div
+                      onClick={() => setIsLoginModalOpen(true)}
+                      className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
+                    >
+                      ログイン
+                    </div> */}
+                    <button
+                      id="dropdownDefaultButton"
+                      data-dropdown-toggle="dropdown"
+                      className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
+                      type="button"
+                      onClick={() => setDropdownOpen(!dropdownOpen)}
+                    >
+                      {user.data.nickName}
+                    </button>
+                  </div>
+
+                  {dropdownOpen && (
+                    <div
+                      id="dropdown"
+                      className="z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 mt-4 fixed right-4"
+                    >
+                      <ul
+                        className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdownDefaultButton"
+                      >
+                        {/* <li>
+                          <a
+                            href="#"
+                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          >
+                            通知
+                          </a>
+                        </li> */}
+                        <li>
+                          <div
+                            onClick={onSubmit}
+                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          >
+                            ログアウト
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
                   <div
-                    onClick={() => setIsRecruitModalOpen(true)}
-                    className="cursor-pointer text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="cursor-pointer text-white bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 dark:focus:ring-blue-800 mr-4"
                   >
                     並べる人を募集する
                   </div>
-                  <Link
-                    href="/notice"
-                    className="relative inline-flex items-center justify-center mr-5"
-                  >
-                    <TbBell size="30" fill="white" />
-                  </Link>
-                  <Link
-                    href="/notice"
-                    className="relative inline-flex items-center justify-center mr-5"
-                  >
-                    <TbBell size="30" fill="red" />
-                    <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                      <FiAlertCircle size="14" />
-                    </span>
-                  </Link>
-                  <button
-                    id="dropdownDefaultButton"
-                    data-dropdown-toggle="dropdown"
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    type="button"
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                  >
-                    {user.data.nickName}
-                  </button>
-                </div>
-
-                {dropdownOpen && (
                   <div
-                    id="dropdown"
-                    className="z-50 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 mt-4 fixed right-4"
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
                   >
-                    <ul
-                      className="py-2 text-sm text-gray-700 dark:text-gray-200"
-                      aria-labelledby="dropdownDefaultButton"
-                    >
-                      <li>
-                        <a
-                          href="#"
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        >
-                          通知
-                        </a>
-                      </li>
-                      <li>
-                        <div
-                          onClick={onSubmit}
-                          className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                        >
-                          ログアウト
-                        </div>
-                      </li>
-                    </ul>
+                    ログイン
                   </div>
-                )}
-              </>
-            ) : (
-              <>
-                <div
-                  onClick={() => setIsLoginModalOpen(true)}
-                  className="cursor-pointer text-white bg-gradient-to-r from-red-500 to-pink-400 hover:from-red-700 hover:to-pink-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-red-600 dark:to-pink-500 dark:hover:from-red-700 dark:hover:to-pink-600 dark:focus:ring-red-800 mr-4"
-                >
-                  並べる人を募集する
-                </div>
-                <div
-                  onClick={() => setIsLoginModalOpen(true)}
-                  className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"
-                >
-                  ログイン
-                </div>
-              </>
-            )}
-          </div>
+                </>
+              )}
+            </div>
+          )}
         </div>
       </nav>
       <LoginModal
