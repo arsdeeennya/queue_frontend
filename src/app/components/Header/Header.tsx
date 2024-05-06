@@ -24,7 +24,6 @@ const Header = () => {
     } catch (error) {}
   };
   const { user, isLoading, mutate } = useGetUser();
-  console.log(user, 333333);
 
   useEffect(() => {
     const closeDropdown = (event: any) => {

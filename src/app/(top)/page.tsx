@@ -81,9 +81,9 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
-        <div>
+    <main className="flex min-h-screen flex-col items-center">
+      <div className="flex flex-col items-center justify-center space-y-4 rounded-xl pt-10">
+        <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
           {jobs.data.map((job: any, index: number) => (
             <div
               className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-2"
