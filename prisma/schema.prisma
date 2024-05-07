@@ -18,7 +18,11 @@ model Job {
   endDate     DateTime
   startDate   DateTime
   applicants  Int[]
+  acceptedId  Int?
+  done        Int[]
+  rejectedIds Int[]
   User        User     @relation(fields: [userId], references: [id])
+  Notice      Notice[]
 }
 
 model Task {
@@ -56,10 +60,13 @@ model Chat {
 
 model Notice {
   id          Int      @id @default(autoincrement())
-  description String
-  accept      Boolean?
   createdAt   DateTime @default(now())
   updatedAt   DateTime
   userId      Int
+  applicantId Int
+  jobId       Int
+  read        Boolean  @default(false)
+  recruiterId Int
+  Job         Job      @relation(fields: [jobId], references: [id])
   User        User     @relation(fields: [userId], references: [id])
 }
