@@ -46,6 +46,10 @@ export default function Home() {
         const res1 = await axios.patch('http://localhost:3001/job', {
           jobId: jobId,
         });
+        const res2 = await axios.post('http://localhost:3001/notice', {
+          jobId: jobId,
+        });
+
         console.log('成功:', res1);
         mutate();
 
@@ -81,12 +85,12 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center">
-      <div className="flex flex-col items-center justify-center space-y-4 rounded-xl pt-10">
+    <main className="flex min-h-screen flex-col items-center px-4">
+      <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
           {jobs.data.map((job: any, index: number) => (
             <div
-              className="max-w-sm rounded overflow-hidden shadow-lg bg-white m-2"
+              className="max-w-sm rounded overflow-hidden shadow-lg bg-white mt-8"
               key={index}
             >
               <div className="px-6 py-4">

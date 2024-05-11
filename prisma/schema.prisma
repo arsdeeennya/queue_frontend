@@ -64,9 +64,9 @@ model Notice {
   updatedAt   DateTime
   userId      Int
   applicantId Int
-  jobId       Int
+  jobId       Int?
   read        Boolean  @default(false)
   recruiterId Int
-  Job         Job      @relation(fields: [jobId], references: [id])
+  Job         Job?     @relation(fields: [jobId], references: [id])
   User        User     @relation(fields: [userId], references: [id])
 }

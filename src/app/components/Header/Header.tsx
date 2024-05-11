@@ -9,6 +9,7 @@ import { TbBell } from 'react-icons/tb';
 import { TbBellPlus } from 'react-icons/tb';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
+import { useGetNotices } from '@/app/hooks/useGetNotices';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -16,6 +17,7 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
+  const { notices, isError, isLoading: isNoticesLoading } = useGetNotices();
   const onSubmit = async () => {
     try {
       await axios.post('http://localhost:3001/auth/logout');
@@ -23,7 +25,7 @@ const Header = () => {
       router.push('/');
     } catch (error) {}
   };
-  const { user, isLoading, mutate } = useGetUser();
+  const { user, isLoading: isUserLoading, mutate } = useGetUser();
 
   useEffect(() => {
     const closeDropdown = (event: any) => {
@@ -63,7 +65,7 @@ const Header = () => {
 
         <div>
           <div className="text-sm lg:flex-grow"></div>
-          {isLoading ? (
+          {isUserLoading || isNoticesLoading ? (
             <div
               className="flex justify-center items-center"
               aria-label="読み込み中"
@@ -81,21 +83,25 @@ const Header = () => {
                     >
                       並べる人を募集する
                     </div>
-                    <Link
-                      href="/notice"
-                      className="relative inline-flex items-center justify-center mr-5"
-                    >
-                      <TbBell size="30" fill="white" />
-                    </Link>
-                    {/* <Link
-                      href="/notice"
-                      className="relative inline-flex items-center justify-center mr-5"
-                    >
-                      <TbBell size="30" fill="red" />
-                      <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-                        <FiAlertCircle size="14" />
-                      </span>
-                    </Link> */}
+                    {notices.data.length > 0 ? (
+                      <Link
+                        href="/notice"
+                        className="relative inline-flex items-center justify-center mr-5"
+                      >
+                        <TbBell size="30" fill="red" />
+                        <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                          <FiAlertCircle size="14" />
+                        </span>
+                      </Link>
+                    ) : (
+                      <Link
+                        href="/notice"
+                        className="relative inline-flex items-center justify-center mr-5"
+                      >
+                        <TbBell size="30" fill="white" />
+                      </Link>
+                    )}
+
                     {/* <div
                       onClick={() => setIsLoginModalOpen(true)}
                       className="cursor-pointer inline-block text-sm px-4 py-2 leading-none border text-white hover:border-transparent hover:text-teal-500 hover:bg-white"

@@ -47,8 +47,8 @@ const NoticePage = () => {
           </div>
         </div>
       </main> */}
-      <main className="flex min-h-screen flex-col items-center p-24">
-        <div className="shadow-lg rounded-lg bg-white mx-auto m-4 p-4 notification-box max-w-md">
+      <main className="flex min-h-screen flex-col items-center px-4">
+        <div className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8">
           <div className="text-sm pb-2">
             <h1 className="text-xl font-bold text-center mb-4">
               マッチングのお知らせ
