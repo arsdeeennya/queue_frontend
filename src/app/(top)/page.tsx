@@ -21,6 +21,7 @@ import { useGetUser } from '@/app/hooks/useGetUser';
 import LoginModal from '../components/Modal/LoginModal';
 // import Modal from '@/components/Modal'; // モーダルコンポーネントのインポート
 import axios from 'axios';
+import { Job } from '@prisma/client';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -88,7 +89,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center px-4">
       <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
-          {jobs.data.map((job: any, index: number) => (
+          {jobs.data.map((job: Job, index: number) => (
             <div
               className="max-w-sm rounded overflow-hidden shadow-lg bg-white mt-8"
               key={index}
