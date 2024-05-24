@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export function useGetChats() {
   const fetcher = async () => {
-    const res = await axios.get('http://localhost:3001/chat');
+    const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/chat`);
     return res;
   };
   const { data, error, isLoading } = useSWR<any>(`/chat`, fetcher);

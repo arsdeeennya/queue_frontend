@@ -20,7 +20,7 @@ const Header = () => {
   const { notices, isError, isLoading: isNoticesLoading } = useGetNotices();
   const onSubmit = async () => {
     try {
-      await axios.post('http://localhost:3001/auth/logout');
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       mutate(null);
       router.push('/');
     } catch (error) {}

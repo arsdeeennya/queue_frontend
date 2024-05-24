@@ -2,6 +2,7 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from 'axios';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Example() {
   const {
@@ -12,10 +13,13 @@ export default function Example() {
 
   const onSubmit: SubmitHandler<any> = async data => {
     try {
-      const response = await axios.post('http://localhost:3001/auth/login', {
-        email: data.email,
-        password: data.password,
-      }); 
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
+        {
+          email: data.email,
+          password: data.password,
+        }
+      );
       // ログイン成功後の処理をここに記述
     } catch (error) {}
   };
@@ -24,7 +28,7 @@ export default function Example() {
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 h-screen w-screen flex justify-center items-center">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <img
+          <Image
             className="mx-auto h-10 w-auto"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt="Your Company"

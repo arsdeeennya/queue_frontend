@@ -24,17 +24,17 @@ const LoginModal = ({
   const onSubmit: SubmitHandler<any> = async data => {
     try {
       if (isRegister) {
-        await axios.post('http://localhost:3001/auth/signup', {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
           email: data.email,
           password: data.password,
           nickName: data.nickName,
         });
-        await axios.post('http://localhost:3001/auth/login', {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
           email: data.email,
           password: data.password,
         });
       } else {
-        await axios.post('http://localhost:3001/auth/login', {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
           email: data.email,
           password: data.password,
         });

@@ -43,7 +43,7 @@ export default function RootLayout({
 
   const onSubmit = async () => {
     try {
-      await axios.post('http://localhost:3001/auth/logout');
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
     } catch (error) {}
   };
 

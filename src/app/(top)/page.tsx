@@ -44,12 +44,18 @@ export default function Home() {
   const handlePatchRequest = async (jobId: number) => {
     if (user && user.data && user.data.id) {
       try {
-        const res1 = await axios.patch('http://localhost:3001/job', {
-          jobId: jobId,
-        });
-        const res2 = await axios.post('http://localhost:3001/notice', {
-          jobId: jobId,
-        });
+        const res1 = await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/job`,
+          {
+            jobId: jobId,
+          }
+        );
+        const res2 = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/notice`,
+          {
+            jobId: jobId,
+          }
+        );
 
         console.log('成功:', res1);
         mutate();
@@ -70,11 +76,14 @@ export default function Home() {
     console.log('jobId', jobId);
     if (user && user.data && user.data.id) {
       try {
-        const res = await axios.delete(`http://localhost:3001/job`, {
-          data: {
-            jobId: jobId,
-          },
-        });
+        const res = await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/job`,
+          {
+            data: {
+              jobId: jobId,
+            },
+          }
+        );
         console.log('削除成功:', res);
         mutate();
       } catch (error) {
@@ -89,7 +98,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center px-4">
       <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
-          {jobs.data.map((job: Job, index: number) => (
+          {jobs.data.map((job: any, index: number) => (
             <div
               className="max-w-sm rounded overflow-hidden shadow-lg bg-white mt-8"
               key={index}
