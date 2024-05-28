@@ -58,7 +58,7 @@ const Header = () => {
           </svg>
           <Link href="/">
             <span className="font-semibold text-xl tracking-tight">
-              並び代行マッチングサービスあああああいいいuuu
+              並び代行マッチングサービス
             </span>
           </Link>
         </div>
@@ -95,10 +95,11 @@ const Header = () => {
                       </Link>
                     ) : (
                       <Link
-                        href="/notice"
-                        className="relative inline-flex items-center justify-center mr-5"
+                        // href="/notice"
+                        href="/"
+                        className="relative inline-flex items-center justify-center mr-5 cursor-not-allowed"
                       >
-                        <TbBell size="30" fill="white" />
+                        <TbBell size="30" fill="gray" />
                       </Link>
                     )}
 
