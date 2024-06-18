@@ -9,7 +9,7 @@ import { TbBell } from 'react-icons/tb';
 import { TbBellPlus } from 'react-icons/tb';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
-import { useGetNotices } from '@/app/hooks/useGetNotices';
+import { useGetNoticesReadCheck } from '@/app/hooks/useGetNoticesReadCheck';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -17,7 +17,11 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
-  const { notices, isError, isLoading: isNoticesLoading } = useGetNotices();
+  const {
+    newNotices,
+    isError,
+    isLoading: isNoticesLoading,
+  } = useGetNoticesReadCheck(false);
   const onSubmit = async () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
@@ -58,7 +62,7 @@ const Header = () => {
           </svg>
           <Link href="/">
             <span className="font-semibold text-xl tracking-tight">
-              並び代行マッチングサービス1
+              並び代行マッチングサービス
             </span>
           </Link>
         </div>
@@ -83,7 +87,7 @@ const Header = () => {
                     >
                       並べる人を募集する
                     </div>
-                    {notices.data.length > 0 ? (
+                    {newNotices && newNotices.data.length > 0 ? (
                       <Link
                         href="/notice"
                         className="relative inline-flex items-center justify-center mr-5"
@@ -95,9 +99,8 @@ const Header = () => {
                       </Link>
                     ) : (
                       <Link
-                        // href="/notice"
-                        href="/"
-                        className="relative inline-flex items-center justify-center mr-5 cursor-not-allowed"
+                        href="/notice"
+                        className="relative inline-flex items-center justify-center mr-5"
                       >
                         <TbBell size="30" fill="gray" />
                       </Link>

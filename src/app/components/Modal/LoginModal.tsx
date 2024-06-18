@@ -17,9 +17,9 @@ const LoginModal = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<any>();
-  const { user, isLoading, mutate } = useGetUser();
+  const { user, mutate } = useGetUser();
 
   const onSubmit: SubmitHandler<any> = async data => {
     try {
@@ -29,21 +29,16 @@ const LoginModal = ({
           password: data.password,
           nickName: data.nickName,
         });
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-          email: data.email,
-          password: data.password,
-        });
-      } else {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-          email: data.email,
-          password: data.password,
-        });
       }
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+        email: data.email,
+        password: data.password,
+      });
       // ログイン成功後の処理をここに記述[
       mutate();
       setIsModalOpen(false);
     } catch (error) {
-      console.log(error, 444444);
+      console.log(error);
     }
   };
 
@@ -101,7 +96,6 @@ const LoginModal = ({
                     type="email"
                     name="email"
                     id="email"
-                    // value="fdsifjadsf@test.com"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     placeholder="name@company.com"
                     required={true}
@@ -120,7 +114,6 @@ const LoginModal = ({
                     name="password"
                     id="password"
                     placeholder="••••••••"
-                    value="user1"
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                     required={true}
                   />
@@ -172,12 +165,22 @@ const LoginModal = ({
                       パスワードを忘れた方はこちら
                     </a>
                   </div> */}
-                <button
-                  type="submit"
-                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  {isRegister ? '会員登録する' : 'ログインする'}
-                </button>
+                {isSubmitting ? (
+                  <div
+                    className="flex justify-center items-center"
+                    aria-label="読み込み中"
+                  >
+                    <div className="animate-spin h-5 w-5 border-4 border-blue-500 rounded-full border-t-transparent"></div>
+                  </div>
+                ) : (
+                  <button
+                    type="submit"
+                    className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    {isRegister ? '会員登録する' : 'ログインする'}
+                  </button>
+                )}
+
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                   <div
                     onClick={() => setIsRegister(!isRegister)}
