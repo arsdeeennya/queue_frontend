@@ -62,7 +62,7 @@ const Header = () => {
           </svg>
           <Link href="/">
             <span className="font-semibold text-xl tracking-tight">
-              並び代行マッチングサービス
+              並び代行サービス
             </span>
           </Link>
         </div>

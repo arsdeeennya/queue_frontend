@@ -13,11 +13,11 @@ const NoticePage = () => {
           <div className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8">
             <div className="text-sm pb-2">
               <h1 className="text-xl font-bold text-center mb-4">
-                マッチングのお知らせ
+                お知らせ
               </h1>
             </div>
             <p className="text-md mb-6 font-medium">
-              5月10日に東京競馬場で並ぶことができるユーザーとマッチングしました。
+              5月10日に東京競馬場で並ぶことができるユーザーが見つかりました。
               このユーザーに依頼する場合は「はい」を選択、
               依頼しない場合は「いいえ」を選択してください。
             </p>

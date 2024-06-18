@@ -34,7 +34,7 @@ export default function Example() {
             alt="Your Company"
           />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            あなたの代わりに並んでくれる人を探すマッチングサービス
+            あなたの代わりに並んでくれる人を探すサービス
           </h2>
         </div>
 
