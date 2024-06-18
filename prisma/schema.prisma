@@ -36,16 +36,17 @@ model Task {
 }
 
 model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  hashedPassword String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime
-  nickName       String?
-  Chat           Chat[]
-  Job            Job[]
-  Notice         Notice[]
-  Task           Task[]
+  id                              Int      @id @default(autoincrement())
+  email                           String   @unique
+  hashedPassword                  String
+  createdAt                       DateTime @default(now())
+  updatedAt                       DateTime
+  nickName                        String?
+  Chat                            Chat[]
+  Job                             Job[]
+  Notice_Notice_applicantIdToUser Notice[] @relation("Notice_applicantIdToUser")
+  Notice                          Notice[]
+  Task                            Task[]
 }
 
 model Chat {
@@ -59,20 +60,29 @@ model Chat {
 }
 
 model Notice {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime
-  userId      Int
-  applicantId Int
-  jobId       Int?
-  read        Boolean  @default(false)
-  recruiterId Int
-  Job         Job?     @relation(fields: [jobId], references: [id])
-  User        User     @relation(fields: [userId], references: [id])
+  id                            Int      @id @default(autoincrement())
+  createdAt                     DateTime @default(now())
+  updatedAt                     DateTime
+  userId                        Int
+  applicantId                   Int
+  jobId                         Int?
+  read                          Boolean  @default(false)
+  recruiterId                   Int
+  User_Notice_applicantIdToUser User     @relation("Notice_applicantIdToUser", fields: [applicantId], references: [id])
+  Job                           Job?     @relation(fields: [jobId], references: [id])
+  User                          User     @relation(fields: [userId], references: [id])
 }
 
 model Test {
   id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model Applicant {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  jobId     Int
   createdAt DateTime @default(now())
   updatedAt DateTime
 }
