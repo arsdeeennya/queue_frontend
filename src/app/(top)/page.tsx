@@ -41,7 +41,7 @@ export default function Home() {
     );
   if (!jobs || isLoadingUser) return <>loading...</>;
 
-  const handlePatchRequest = async (jobId: number) => {
+  const handlePatchRequest = async (jobId: number, userId: number) => {
     if (user && user.data && user.data.id) {
       try {
         const res1 = await axios.patch(
@@ -54,6 +54,7 @@ export default function Home() {
           `${process.env.NEXT_PUBLIC_API_URL}/notice`,
           {
             jobId: jobId,
+            userId: userId,
           }
         );
 
@@ -129,7 +130,7 @@ export default function Home() {
                   ) : (
                     <div
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                      onClick={() => handlePatchRequest(job.id)}
+                      onClick={() => handlePatchRequest(job.id, job.userId)}
                     >
                       ここに並ぶ
                     </div>

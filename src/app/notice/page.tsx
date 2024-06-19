@@ -72,6 +72,9 @@ const NoticePage = () => {
                   いいえ
                 </button>
               </div>
+              <div className="text-right mt-3">
+                {format(notice.createdAt, 'yyyy年M月d日H時m分')}
+              </div>
             </div>
           ))
         ) : (
