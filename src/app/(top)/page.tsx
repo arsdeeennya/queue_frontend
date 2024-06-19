@@ -123,12 +123,12 @@ export default function Home() {
                       ) : user &&
                         user.data.id === job.userId &&
                         job.acceptedId ? (
-                        <div
+                        <Link
+                          href="/chat"
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                          onClick={() => setIsModalOpen(true)}
                         >
                           応募者とチャット
-                        </div>
+                        </Link>
                       ) : !user ? (
                         <div
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
@@ -140,6 +140,14 @@ export default function Home() {
                         <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
                           不採用
                         </div>
+                      ) : job.applicants.includes(user.data.id) &&
+                        job.acceptedId === user.data.id ? (
+                        <Link
+                          href="/chat"
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                        >
+                          募集者とチャット
+                        </Link>
                       ) : job.applicants.includes(user.data.id) ? (
                         <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
                           応募済
