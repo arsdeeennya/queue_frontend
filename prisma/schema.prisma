@@ -68,6 +68,7 @@ model Notice {
   jobId                         Int?
   read                          Boolean  @default(false)
   recruiterId                   Int
+  answer                        Boolean?
   User_Notice_applicantIdToUser User     @relation("Notice_applicantIdToUser", fields: [applicantId], references: [id])
   Job                           Job?     @relation(fields: [jobId], references: [id])
   User                          User     @relation(fields: [userId], references: [id])

@@ -1,35 +1,51 @@
 'use client';
-
 import React from 'react';
 import { useGetNotices } from '@/app/hooks/useGetNotices';
 import axios from 'axios';
 import { format } from 'date-fns';
 
 const NoticePage = () => {
-  const { notices, isError, isLoading: isNoticesLoading } = useGetNotices();
-  const addAcceptedId = async (userId: number, jobId: number) => {
+  const {
+    notices,
+    isError,
+    isLoading: isNoticesLoading,
+    mutate,
+  } = useGetNotices();
+  const addAcceptedId = async (
+    userId: number,
+    jobId: number,
+    noticeId: number
+  ) => {
     try {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/job/addAcceptedId`,
         {
           acceptedId: userId,
           jobId: jobId,
+          noticeId: noticeId,
         }
       );
+      mutate();
     } catch (error) {
       console.error('エラー:', error);
     }
   };
 
-  const addRejectedId = async (userId: number, jobId: number) => {
+  const addRejectedId = async (
+    userId: number,
+    jobId: number,
+    noticeId: number
+  ) => {
     try {
       await axios.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/job/addRejectedId`,
         {
           rejectedId: userId,
           jobId: jobId,
+          noticeId: noticeId,
         }
       );
+      mutate();
     } catch (error) {
       console.error('エラー:', error);
     }
@@ -54,24 +70,47 @@ const NoticePage = () => {
                 このユーザーに依頼する場合は「はい」を選択、
                 依頼しない場合は「いいえ」を選択してください。
               </p>
-              <div className="flex justify-center space-x-4">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded border-blue-700"
-                  onClick={() =>
-                    addAcceptedId(notice.applicant.id, notice.job.id)
-                  }
-                >
-                  はい
-                </button>
-                <button
-                  className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded"
-                  onClick={() =>
-                    addRejectedId(notice.applicant.id, notice.job.id)
-                  }
-                >
-                  いいえ
-                </button>
-              </div>
+
+              {notice.answer ? (
+                <div className="text-left">
+                  <button className="bg-gray-500 text-white font-bold py-2 px-6 rounded">
+                    はいを選択済み
+                  </button>
+                </div>
+              ) : notice.answer === false ? (
+                <div className="text-right">
+                  <button className="bg-gray-500 text-white font-bold py-2 px-6 rounded">
+                    いいえを選択済み
+                  </button>
+                </div>
+              ) : (
+                <div className="flex justify-center space-x-4">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded border-blue-700"
+                    onClick={() =>
+                      addAcceptedId(
+                        notice.applicant.id,
+                        notice.job.id,
+                        notice.id
+                      )
+                    }
+                  >
+                    はい
+                  </button>
+                  <button
+                    className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded"
+                    onClick={() =>
+                      addRejectedId(
+                        notice.applicant.id,
+                        notice.job.id,
+                        notice.id
+                      )
+                    }
+                  >
+                    いいえ
+                  </button>
+                </div>
+              )}
               <div className="text-right mt-3">
                 {format(notice.createdAt, 'yyyy年M月d日H時m分')}
               </div>
