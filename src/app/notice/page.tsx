@@ -73,15 +73,17 @@ const NoticePage = () => {
 
               {notice.answer ? (
                 <div className="text-left">
-                  <button className="bg-gray-500 text-white font-bold py-2 px-6 rounded">
-                    はいを選択済み
+                  <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded">
+                    はい
                   </button>
+                  を選択済み
                 </div>
               ) : notice.answer === false ? (
                 <div className="text-right">
-                  <button className="bg-gray-500 text-white font-bold py-2 px-6 rounded">
-                    いいえを選択済み
+                  <button className="bg-red-500 text-white font-bold py-2 px-6 rounded">
+                    いいえ
                   </button>
+                  を選択済み
                 </div>
               ) : (
                 <div className="flex justify-center space-x-4">

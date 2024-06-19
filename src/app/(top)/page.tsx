@@ -107,33 +107,52 @@ export default function Home() {
               <div className="px-6 py-4">
                 <div className="flex flex-row justify-between">
                   <div className="font-bold text-xl mb-2">{job.location}</div>
-                  {user && user.data.id === job.userId ? (
-                    <div className="flex items-center">
-                      <button
-                        className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded"
-                        onClick={() => handleDeleteRequest(job.id)}
-                      >
-                        削除する
-                      </button>
-                    </div>
-                  ) : !user ? (
-                    <div
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      ここに並ぶ
-                    </div>
-                  ) : job.applicants.includes(user.data.id) ? (
-                    <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
-                      応募済
-                    </div>
-                  ) : (
-                    <div
-                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                      onClick={() => handlePatchRequest(job.id, job.userId)}
-                    >
-                      ここに並ぶ
-                    </div>
+                  {user && (
+                    <>
+                      {user &&
+                      user.data.id === job.userId &&
+                      !job.acceptedId ? (
+                        <div className="flex items-center">
+                          <button
+                            className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded"
+                            onClick={() => handleDeleteRequest(job.id)}
+                          >
+                            削除する
+                          </button>
+                        </div>
+                      ) : user &&
+                        user.data.id === job.userId &&
+                        job.acceptedId ? (
+                        <div
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                          onClick={() => setIsModalOpen(true)}
+                        >
+                          応募者とチャット
+                        </div>
+                      ) : !user ? (
+                        <div
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                          onClick={() => setIsModalOpen(true)}
+                        >
+                          ここに並ぶ
+                        </div>
+                      ) : job.rejectedIds.includes(user.data.id) ? (
+                        <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                          不採用
+                        </div>
+                      ) : job.applicants.includes(user.data.id) ? (
+                        <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                          応募済
+                        </div>
+                      ) : (
+                        <div
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                          onClick={() => handlePatchRequest(job.id, job.userId)}
+                        >
+                          ここに並ぶ
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
                 <div className="pb-2">
