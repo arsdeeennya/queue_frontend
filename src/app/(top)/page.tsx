@@ -107,6 +107,8 @@ export default function Home() {
               <div className="px-6 py-4">
                 <div className="flex flex-row justify-between">
                   <div className="font-bold text-xl mb-2">{job.location}</div>
+                  {/* https://ja.react.dev/learn/conditional-rendering
+                  これはシンプルな条件分岐の場合にはうまく動きますが、使いすぎないようにしましょう。条件のためのマークアップが増えすぎてコンポーネントが見づらくなった場合は、見やすくするために子コンポーネントを抽出することを検討してください。React ではマークアップはプログラミングコードの一種ですので、変数や関数といった道具を利用して複雑な式を読みやすく整頓することができます。 */}
                   {user && (
                     <>
                       {user &&
