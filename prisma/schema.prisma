@@ -8,45 +8,29 @@ datasource db {
 }
 
 model Job {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   price       Int
   location    String
   description String?
   userId      Int
-  createdAt   DateTime @default(now())
+  createdAt   DateTime     @default(now())
   updatedAt   DateTime
   endDate     DateTime
   startDate   DateTime
-  applicants  Int[]
-  acceptedId  Int?
-  done        Int[]
-  rejectedIds Int[]
-  user        User     @relation(fields: [userId], references: [id])
-  Notice      Notice[]
-}
-
-model Task {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime
-  title       String
-  description String?
-  userId      Int
-  User        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status      Boolean?
+  Applicants  Applicants[]
+  user        User         @relation(fields: [userId], references: [id])
 }
 
 model User {
-  id                              Int      @id @default(autoincrement())
-  email                           String   @unique
-  hashedPassword                  String
-  createdAt                       DateTime @default(now())
-  updatedAt                       DateTime
-  nickName                        String?
-  Chat                            Chat[]
-  Job                             Job[]
-  Notice_Notice_applicantIdToUser Notice[] @relation("Notice_applicantIdToUser")
-  Notice                          Notice[]
-  Task                            Task[]
+  id             Int      @id @default(autoincrement())
+  email          String   @unique
+  hashedPassword String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime
+  nickName       String?
+  Chat           Chat[]
+  Job            Job[]
 }
 
 model Chat {
@@ -59,31 +43,12 @@ model Chat {
   User      User     @relation(fields: [userId], references: [id])
 }
 
-model Notice {
-  id                            Int      @id @default(autoincrement())
-  createdAt                     DateTime @default(now())
-  updatedAt                     DateTime
-  userId                        Int
-  applicantId                   Int
-  jobId                         Int?
-  read                          Boolean  @default(false)
-  recruiterId                   Int
-  answer                        Boolean?
-  User_Notice_applicantIdToUser User     @relation("Notice_applicantIdToUser", fields: [applicantId], references: [id])
-  Job                           Job?     @relation(fields: [jobId], references: [id])
-  User                          User     @relation(fields: [userId], references: [id])
-}
-
-model Test {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-}
-
-model Applicant {
+model Applicants {
   id        Int      @id @default(autoincrement())
   userId    Int
   jobId     Int
+  status    Boolean?
   createdAt DateTime @default(now())
   updatedAt DateTime
+  Job       Job      @relation(fields: [jobId], references: [id])
 }

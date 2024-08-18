@@ -1,16 +1,16 @@
 'use client';
 import React from 'react';
-import { useGetNotices } from '@/app/hooks/useGetNotices';
+import { useGetApplicants } from '@/app/hooks/useGetApplicants';
 import axios from 'axios';
 import { format } from 'date-fns';
 
 const NoticePage = () => {
   const {
-    notices,
+    applicants,
     isError,
-    isLoading: isNoticesLoading,
+    isLoading: isApplicantsLoading,
     mutate,
-  } = useGetNotices();
+  } = useGetApplicants();
   const addAcceptedId = async (
     userId: number,
     jobId: number,
@@ -54,8 +54,8 @@ const NoticePage = () => {
   return (
     <>
       <main className="flex min-h-screen flex-col items-center px-4">
-        {notices && notices.data.length > 0 ? (
-          notices.data.map((notice: any, index: number) => (
+        {applicants && applicants.length > 0 ? (
+          applicants.map((applicant: any, index: number) => (
             <div
               className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8"
               key={index}

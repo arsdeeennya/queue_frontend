@@ -1,27 +1,25 @@
 import useSWR from 'swr';
 import axios from 'axios';
+import { Applicants, Job, User } from '@prisma/client';
+
+export type UserWithJobs = User & {
+  jobs: (Job & {
+    applicants: Applicants[];
+  })[];
+};
 
 export function useGetUser() {
   const fetcher = async () => {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/user`);
     return res;
   };
-  const { data, error, isLoading, mutate } = useSWR<any>(`/user`, fetcher, {
-    onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
-      // 404では再試行しない。
-      if (error.status === 401) return;
-
-      // // 特定のキーでは再試行しない。
-      // if (key === '/api/user') return;
-
-      // // 再試行は10回までしかできません。
-      // if (retryCount >= 10) return;
-
-      // // 5秒後に再試行します。
-      // setTimeout(() => revalidate({ retryCount }), 5000);
-    },
-    // shouldRetryOnError: false,
-  });
+  const { data, error, isLoading, mutate } = useSWR<UserWithJobs>(
+    `/user`,
+    async () => {
+      const res = await fetcher();
+      return res.data;
+    }
+  );
 
   return {
     user: data,

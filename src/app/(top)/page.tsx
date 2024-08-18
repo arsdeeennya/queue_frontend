@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 // import 'react-credit-cards-2/es/styles-compiled.css';
@@ -6,7 +7,7 @@ import JobCard from '../components/JobCard';
 import RecruitmentButton from '../components/RecruitmentButton'; // New import statement
 import { CreditCardForm } from '@/app/components/CreditCardForm';
 import useSWR from 'swr';
-import { useGetJobs } from '@/app/hooks/useGetJobs';
+import { JobWithApplicants, useGetJobs } from '@/app/hooks/useGetJobs';
 import Image from 'next/image';
 import {
   differenceInHours,
@@ -21,13 +22,24 @@ import { useGetUser } from '@/app/hooks/useGetUser';
 import LoginModal from '../components/Modal/LoginModal';
 // import Modal from '@/components/Modal'; // モーダルコンポーネントのインポート
 import axios from 'axios';
-import { Job } from '@prisma/client';
+import { Applicants, Job } from '@prisma/client';
+import { useGetApplicants } from '@/app/hooks/useGetApplicants';
+import { cookies } from 'next/headers';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
   const { jobs, isError, isLoading, mutate } = useGetJobs();
   const { user, isLoading: isLoadingUser } = useGetUser();
+  const { applicants, isLoading: isLoadingApplicants } = useGetApplicants();
+
+  console.log(22222);
+  console.log(22222);
+  console.log(22222);
+  console.log(applicants);
+  console.log(22222);
+  console.log(22222);
+  console.log(22222);
 
   if (isError) return <div>failed to load</div>;
   if (isLoading)
@@ -41,22 +53,22 @@ export default function Home() {
     );
   if (!jobs || isLoadingUser) return <>loading...</>;
 
-  const handlePatchRequest = async (jobId: number, userId: number) => {
-    if (user && user.data && user.data.id) {
+  const handlePatchRequest = async (jobId: number) => {
+    if (user && user.id) {
       try {
-        const res1 = await axios.patch(
-          `${process.env.NEXT_PUBLIC_API_URL}/job`,
+        const res1 = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/applicant`,
           {
             jobId: jobId,
           }
         );
-        const res2 = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/notice`,
-          {
-            jobId: jobId,
-            userId: userId,
-          }
-        );
+        // const res2 = await axios.post(
+        //   `${process.env.NEXT_PUBLIC_API_URL}/notice`,
+        //   {
+        //     jobId: jobId,
+        //     userId: userId,
+        //   }
+        // );
 
         console.log('成功:', res1);
         mutate();
@@ -75,7 +87,7 @@ export default function Home() {
 
   const handleDeleteRequest = async (jobId: number) => {
     console.log('jobId', jobId);
-    if (user && user.data && user.data.id) {
+    if (user && user.id) {
       try {
         const res = await axios.delete(
           `${process.env.NEXT_PUBLIC_API_URL}/job`,
@@ -94,12 +106,12 @@ export default function Home() {
       console.log('ユーザーがログインしていません。');
     }
   };
-
+  console.log(jobs);
   return (
     <main className="flex min-h-screen flex-col items-center px-4">
       <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
-          {jobs.data.map((job: any, index: number) => (
+          {jobs.map((job: JobWithApplicants, index: number) => (
             <div
               className="max-w-sm rounded overflow-hidden shadow-lg bg-white mt-8"
               key={index}
@@ -109,11 +121,31 @@ export default function Home() {
                   <div className="font-bold text-xl mb-2">{job.location}</div>
                   {/* https://ja.react.dev/learn/conditional-rendering
                   これはシンプルな条件分岐の場合にはうまく動きますが、使いすぎないようにしましょう。条件のためのマークアップが増えすぎてコンポーネントが見づらくなった場合は、見やすくするために子コンポーネントを抽出することを検討してください。React ではマークアップはプログラミングコードの一種ですので、変数や関数といった道具を利用して複雑な式を読みやすく整頓することができます。 */}
-                  {user && (
-                    <>
-                      {user &&
-                      user.data.id === job.userId &&
-                      !job.acceptedId ? (
+
+                  {user &&
+                    user.id &&
+                    (user.id === job.userId ? (
+                      job.applicants.length > 0 &&
+                      job.applicants.filter(
+                        (applicant: Applicants) => applicant.status === true
+                      ).length > 0 ? (
+                        <Link
+                          href="/chat"
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                        >
+                          チャット
+                        </Link>
+                      ) : job.applicants.length > 0 &&
+                        job.applicants.filter(
+                          (applicant: Applicants) => applicant.status === null
+                        ).length > 0 ? (
+                        <Link
+                          href="/notice"
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                        >
+                          応募あり
+                        </Link>
+                      ) : (
                         <div className="flex items-center">
                           <button
                             className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded"
@@ -122,49 +154,46 @@ export default function Home() {
                             削除する
                           </button>
                         </div>
-                      ) : user &&
-                        user.data.id === job.userId &&
-                        job.acceptedId ? (
-                        <Link
-                          href="/chat"
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                        >
-                          応募者とチャット
-                        </Link>
-                      ) : !user ? (
-                        <div
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                          onClick={() => setIsModalOpen(true)}
-                        >
-                          ここに並ぶ
-                        </div>
-                      ) : job.rejectedIds.includes(user.data.id) ? (
-                        <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
-                          不採用
-                        </div>
-                      ) : job.applicants.includes(user.data.id) &&
-                        job.acceptedId === user.data.id ? (
-                        <Link
-                          href="/chat"
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                        >
-                          募集者とチャット
-                        </Link>
-                      ) : job.applicants.includes(user.data.id) ? (
-                        <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
-                          応募済
-                        </div>
-                      ) : (
-                        <div
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                          onClick={() => handlePatchRequest(job.id, job.userId)}
-                        >
-                          ここに並ぶ
-                        </div>
-                      )}
-                    </>
-                  )}
+                      )
+                    ) : job.applicants.length > 0 &&
+                      // statusがtrueなものがあれば、投稿者とチャットを表示
+                      job.applicants.filter((applicant: Applicants) => {
+                        return applicant.status === true;
+                      }).length > 0 ? (
+                      <Link
+                        href="/chat"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                      >
+                        チャット
+                      </Link>
+                    ) : job.applicants.length > 0 &&
+                      job.applicants.filter(
+                        (applicant: Applicants) =>
+                          applicant.userId === user.id &&
+                          applicant.status === false
+                      ).length > 0 ? (
+                      <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                        不採用
+                      </div>
+                    ) : job.applicants.length > 0 &&
+                      job.applicants.filter(
+                        (applicant: Applicants) =>
+                          applicant.userId === user.id &&
+                          applicant.status === null
+                      ).length > 0 ? (
+                      <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                        応募済
+                      </div>
+                    ) : (
+                      <div
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                        onClick={() => handlePatchRequest(job.id)}
+                      >
+                        ここに並ぶ
+                      </div>
+                    ))}
                 </div>
+
                 <div className="pb-2">
                   <div className="rounded-full py-1 text-sm font-semibold text-gray-700">
                     ・日付：{format(job.startDate, 'M月d日')}
