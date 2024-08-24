@@ -119,7 +119,7 @@ const Header = () => {
                       type="button"
                       onClick={() => setDropdownOpen(!dropdownOpen)}
                     >
-                      {user.data.nickName}
+                      {user.nickName}
                     </button>
                   </div>
 
