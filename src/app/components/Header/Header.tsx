@@ -25,7 +25,7 @@ const Header = () => {
   const onSubmit = async () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
-      mutate(null);
+      mutate();
       router.push('/');
     } catch (error) {}
   };
