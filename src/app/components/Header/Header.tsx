@@ -10,7 +10,7 @@ import { TbBellPlus } from 'react-icons/tb';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useGetNoticesReadCheck } from '@/app/hooks/useGetNoticesReadCheck';
-import { useGetApplicants } from '@/app/hooks/useGetApplicants';
+import { useGetApplications } from '@/app/hooks/useGetApplications';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -25,10 +25,10 @@ const Header = () => {
   // } = useGetNoticesReadCheck(false);
 
   const {
-    applicants,
+    applications,
     isError,
-    isLoading: isApplicantsLoading,
-  } = useGetApplicants();
+    isLoading: isApplicationsLoading,
+  } = useGetApplications();
 
   const onSubmit = async () => {
     try {
@@ -56,8 +56,9 @@ const Header = () => {
   }, [dropdownOpen]);
 
   // 承認待ちの応募
-  const pendingApplicants = applicants?.filter(
-    applicant => applicant.job.user.id === user?.id && applicant.status === null
+  const pendingApplications = applications?.filter(
+    application =>
+      application.jobs.users.id === user?.id && application.status === null
   );
 
   return (
@@ -82,7 +83,7 @@ const Header = () => {
 
         <div>
           <div className="text-sm lg:flex-grow"></div>
-          {isUserLoading || isApplicantsLoading ? (
+          {isUserLoading || isApplicationsLoading ? (
             <div
               className="flex justify-center items-center"
               aria-label="読み込み中"
@@ -100,7 +101,7 @@ const Header = () => {
                     >
                       並べる人を募集する
                     </div>
-                    {pendingApplicants && pendingApplicants.length > 0 ? (
+                    {pendingApplications && pendingApplications.length > 0 ? (
                       <Link
                         href="/notice"
                         className="relative inline-flex items-center justify-center mr-5"

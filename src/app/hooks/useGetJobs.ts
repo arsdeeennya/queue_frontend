@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import axios from 'axios';
-import { Job, User, Applicants } from '@prisma/client';
+import { Jobs, Users, Applications } from '@prisma/client';
 
-export type JobWithApplicants = Job & {
-  user: User;
-  applicants: Applicants[];
+export type JobWithApplications = Jobs & {
+  users: Users;
+  applications: Applications[];
 };
 
 export function useGetJobs() {
@@ -13,7 +13,7 @@ export function useGetJobs() {
     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/job`);
     return res;
   };
-  const { data, error, isLoading, mutate } = useSWR<JobWithApplicants[]>(
+  const { data, error, isLoading, mutate } = useSWR<JobWithApplications[]>(
     `/job`,
     async () => {
       const res = await fetcher();

@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import axios from 'axios';
-import { Applicants, Job, User } from '@prisma/client';
+import { Users, Jobs, Applications } from '@prisma/client';
 
-export type UserWithJobs = User & {
-  jobs: (Job & {
-    applicants: Applicants[];
+export type UserWithJobs = Users & {
+  jobs: (Jobs & {
+    applications: Applications[];
   })[];
 };
 

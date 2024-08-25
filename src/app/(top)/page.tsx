@@ -7,7 +7,7 @@ import JobCard from '../components/JobCard';
 import RecruitmentButton from '../components/RecruitmentButton'; // New import statement
 import { CreditCardForm } from '@/app/components/CreditCardForm';
 import useSWR from 'swr';
-import { JobWithApplicants, useGetJobs } from '@/app/hooks/useGetJobs';
+import { JobWithApplications, useGetJobs } from '@/app/hooks/useGetJobs';
 import Image from 'next/image';
 import {
   differenceInHours,
@@ -22,8 +22,8 @@ import { useGetUser } from '@/app/hooks/useGetUser';
 import LoginModal from '../components/Modal/LoginModal';
 // import Modal from '@/components/Modal'; // モーダルコンポーネントのインポート
 import axios from 'axios';
-import { Applicants, Job } from '@prisma/client';
-import { useGetApplicants } from '@/app/hooks/useGetApplicants';
+import { Applications, Jobs } from '@prisma/client';
+import { useGetApplications } from '@/app/hooks/useGetApplications';
 import { cookies } from 'next/headers';
 
 export default function Home() {
@@ -31,12 +31,12 @@ export default function Home() {
   const [isRegister, setIsRegister] = useState(false);
   const { jobs, isError, isLoading, mutate } = useGetJobs();
   const { user, isLoading: isLoadingUser } = useGetUser();
-  const { applicants, isLoading: isLoadingApplicants } = useGetApplicants();
+  const { applications, isLoading: isLoadingApplications } =
+    useGetApplications();
 
   console.log(22222);
   console.log(22222);
   console.log(22222);
-  console.log(applicants);
   console.log(22222);
   console.log(22222);
   console.log(22222);
@@ -57,7 +57,7 @@ export default function Home() {
     if (user && user.id) {
       try {
         const res1 = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/applicant`,
+          `${process.env.NEXT_PUBLIC_API_URL}/application`,
           {
             jobId: jobId,
           }
@@ -111,7 +111,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center px-4">
       <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
-          {jobs.map((job: JobWithApplicants, index: number) => (
+          {jobs.map((job: JobWithApplications, index: number) => (
             <div
               className="max-w-sm rounded overflow-hidden shadow-lg bg-white mt-8"
               key={index}
@@ -125,9 +125,10 @@ export default function Home() {
                   {user &&
                     user.id &&
                     (user.id === job.userId ? (
-                      job.applicants.length > 0 &&
-                      job.applicants.filter(
-                        (applicant: Applicants) => applicant.status === true
+                      job.applications.length > 0 &&
+                      job.applications.filter(
+                        (application: Applications) =>
+                          application.status === true
                       ).length > 0 ? (
                         <Link
                           href="/chat"
@@ -135,9 +136,10 @@ export default function Home() {
                         >
                           チャット
                         </Link>
-                      ) : job.applicants.length > 0 &&
-                        job.applicants.filter(
-                          (applicant: Applicants) => applicant.status === null
+                      ) : job.applications.length > 0 &&
+                        job.applications.filter(
+                          (application: Applications) =>
+                            application.status === null
                         ).length > 0 ? (
                         <Link
                           href="/notice"
@@ -155,10 +157,10 @@ export default function Home() {
                           </button>
                         </div>
                       )
-                    ) : job.applicants.length > 0 &&
+                    ) : job.applications.length > 0 &&
                       // statusがtrueなものがあれば、投稿者とチャットを表示
-                      job.applicants.filter((applicant: Applicants) => {
-                        return applicant.status === true;
+                      job.applications.filter((application: Applications) => {
+                        return application.status === true;
                       }).length > 0 ? (
                       <Link
                         href="/chat"
@@ -166,20 +168,20 @@ export default function Home() {
                       >
                         チャット
                       </Link>
-                    ) : job.applicants.length > 0 &&
-                      job.applicants.filter(
-                        (applicant: Applicants) =>
-                          applicant.userId === user.id &&
-                          applicant.status === false
+                    ) : job.applications.length > 0 &&
+                      job.applications.filter(
+                        (application: Applications) =>
+                          application.userId === user.id &&
+                          application.status === false
                       ).length > 0 ? (
                       <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
                         不採用
                       </div>
-                    ) : job.applicants.length > 0 &&
-                      job.applicants.filter(
-                        (applicant: Applicants) =>
-                          applicant.userId === user.id &&
-                          applicant.status === null
+                    ) : job.applications.length > 0 &&
+                      job.applications.filter(
+                        (application: Applications) =>
+                          application.userId === user.id &&
+                          application.status === null
                       ).length > 0 ? (
                       <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
                         応募済
@@ -209,7 +211,7 @@ export default function Home() {
                   </div>
                 </div>
                 <p className="text-gray-700 text-base">
-                  {job.description} from {job.user.nickName}
+                  {job.description} from {job.users.nickName}
                 </p>
               </div>
             </div>

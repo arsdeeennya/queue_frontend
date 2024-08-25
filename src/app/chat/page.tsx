@@ -15,7 +15,7 @@
 'use client';
 
 import { useGetChats } from '@/app/hooks/useGetChats';
-import { Chat } from '@prisma/client';
+import { Chats } from '@prisma/client';
 
 export default function Example() {
   const { chats, isError, isLoading } = useGetChats();
@@ -34,7 +34,7 @@ export default function Example() {
       <div className="h-screen flex flex-col">
         <div className="bg-gray-200 flex-1 overflow-y-scroll">
           <div className="px-4 py-2">
-            {chats.data.map((chat: Chat, index: number) => (
+            {chats.data.map((chat: Chats, index: number) => (
               <>
                 {chat.userId === 1 ? (
                   <div className="bg-white rounded-lg p-2 shadow mb-2 max-w-sm">

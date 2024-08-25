@@ -7,48 +7,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Job {
-  id          Int          @id @default(autoincrement())
-  price       Int
-  location    String
-  description String?
-  userId      Int
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime
-  endDate     DateTime
-  startDate   DateTime
-  status      Boolean?
-  Applicants  Applicants[]
-  user        User         @relation(fields: [userId], references: [id])
-}
-
-model User {
-  id             Int      @id @default(autoincrement())
-  email          String   @unique
-  hashedPassword String
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime
-  nickName       String?
-  Chat           Chat[]
-  Job            Job[]
-}
-
-model Chat {
-  id        Int      @id @default(autoincrement())
-  roomNum   Int
-  text      String
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime
-  User      User     @relation(fields: [userId], references: [id])
-}
-
-model Applicants {
+model Applications {
   id        Int      @id @default(autoincrement())
   userId    Int
   jobId     Int
   status    Boolean?
   createdAt DateTime @default(now())
   updatedAt DateTime
-  Job       Job      @relation(fields: [jobId], references: [id])
+  Jobs      Jobs     @relation(fields: [jobId], references: [id])
+}
+
+model Chats {
+  id        Int      @id @default(autoincrement())
+  roomNum   Int
+  text      String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Users     Users    @relation(fields: [userId], references: [id])
+}
+
+model Jobs {
+  id           Int            @id @default(autoincrement())
+  location     String
+  startDate    DateTime
+  endDate      DateTime
+  price        Int
+  description  String?
+  userId       Int
+  status       Boolean?
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime
+  Applications Applications[]
+  Users        Users          @relation(fields: [userId], references: [id])
+  Notices      Notices[]
+}
+
+model Notices {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  jobId     Int
+  status    Boolean?
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  Jobs      Jobs     @relation(fields: [jobId], references: [id])
+  Users     Users    @relation(fields: [userId], references: [id])
+}
+
+model Users {
+  id             Int       @id @default(autoincrement())
+  email          String    @unique
+  hashedPassword String
+  nickName       String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime
+  Chats          Chats[]
+  Jobs           Jobs[]
+  Notices        Notices[]
 }
