@@ -10,6 +10,7 @@ import { TbBellPlus } from 'react-icons/tb';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 import { useGetNoticesReadCheck } from '@/app/hooks/useGetNoticesReadCheck';
+import { useGetApplicants } from '@/app/hooks/useGetApplicants';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -17,11 +18,18 @@ const Header = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
+  // const {
+  //   newNotices,
+  //   isError,
+  //   isLoading: isNoticesLoading,
+  // } = useGetNoticesReadCheck(false);
+
   const {
-    newNotices,
+    applicants,
     isError,
-    isLoading: isNoticesLoading,
-  } = useGetNoticesReadCheck(false);
+    isLoading: isApplicantsLoading,
+  } = useGetApplicants();
+
   const onSubmit = async () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
@@ -47,6 +55,11 @@ const Header = () => {
     };
   }, [dropdownOpen]);
 
+  // 承認待ちの応募
+  const pendingApplicants = applicants?.filter(
+    applicant => applicant.job.user.id === user?.id && applicant.status === null
+  );
+
   return (
     <>
       <nav className="flex items-center justify-between flex-wrap bg-teal-500 p-6 sticky top-0">
@@ -69,7 +82,7 @@ const Header = () => {
 
         <div>
           <div className="text-sm lg:flex-grow"></div>
-          {isUserLoading || isNoticesLoading ? (
+          {isUserLoading || isApplicantsLoading ? (
             <div
               className="flex justify-center items-center"
               aria-label="読み込み中"
@@ -87,7 +100,7 @@ const Header = () => {
                     >
                       並べる人を募集する
                     </div>
-                    {newNotices && newNotices.data.length > 0 ? (
+                    {pendingApplicants && pendingApplicants.length > 0 ? (
                       <Link
                         href="/notice"
                         className="relative inline-flex items-center justify-center mr-5"
