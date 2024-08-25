@@ -30,14 +30,14 @@ const Header = () => {
     isLoading: isApplicationsLoading,
   } = useGetApplications();
 
+  const { user, isLoading: isUserLoading, mutate } = useGetUser();
+
   const onSubmit = async () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
-      mutate();
-      router.push('/');
+      mutate(undefined);
     } catch (error) {}
   };
-  const { user, isLoading: isUserLoading, mutate } = useGetUser();
 
   useEffect(() => {
     const closeDropdown = (event: any) => {
