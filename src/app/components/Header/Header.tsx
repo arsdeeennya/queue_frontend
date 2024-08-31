@@ -9,14 +9,13 @@ import { TbBell } from 'react-icons/tb';
 import { TbBellPlus } from 'react-icons/tb';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
-import { useGetNoticesReadCheck } from '@/app/hooks/useGetNoticesReadCheck';
+import { useGetNotificationsReadCheck } from '@/app/hooks/useGetNotificationsReadCheck';
 import { useGetApplications } from '@/app/hooks/useGetApplications';
 
 const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRecruitModalOpen, setIsRecruitModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const router = useRouter();
 
   // const {
   //   newNotices,
@@ -24,11 +23,8 @@ const Header = () => {
   //   isLoading: isNoticesLoading,
   // } = useGetNoticesReadCheck(false);
 
-  const {
-    applications,
-    isError,
-    isLoading: isApplicationsLoading,
-  } = useGetApplications();
+  const { applications, isLoading: isApplicationsLoading } =
+    useGetApplications();
 
   const { user, isLoading: isUserLoading, mutate } = useGetUser();
 
@@ -103,7 +99,7 @@ const Header = () => {
                     </div>
                     {pendingApplications && pendingApplications.length > 0 ? (
                       <Link
-                        href="/notice"
+                        href="/notification"
                         className="relative inline-flex items-center justify-center mr-5"
                       >
                         <TbBell size="30" fill="red" />
@@ -113,7 +109,7 @@ const Header = () => {
                       </Link>
                     ) : (
                       <Link
-                        href="/notice"
+                        href="/notification"
                         className="relative inline-flex items-center justify-center mr-5"
                       >
                         <TbBell size="30" fill="gray" />
@@ -157,7 +153,7 @@ const Header = () => {
                         <li>
                           <div
                             onClick={onSubmit}
-                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                            className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer"
                           >
                             ログアウト
                           </div>

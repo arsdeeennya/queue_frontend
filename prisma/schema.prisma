@@ -28,22 +28,34 @@ model Chats {
 }
 
 model Jobs {
-  id           Int            @id @default(autoincrement())
-  location     String
-  startDate    DateTime
-  endDate      DateTime
-  price        Int
-  description  String?
-  userId       Int
-  status       Boolean?
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime
-  Applications Applications[]
-  Users        Users          @relation(fields: [userId], references: [id])
-  Notices      Notices[]
+  id            Int             @id @default(autoincrement())
+  location      String
+  startDate     DateTime
+  endDate       DateTime
+  price         Int
+  description   String?
+  userId        Int
+  status        Boolean?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime
+  Applications  Applications[]
+  Users         Users           @relation(fields: [userId], references: [id])
+  Notifications Notifications[]
 }
 
-model Notices {
+model Users {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  hashedPassword String
+  nickName       String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime
+  Chats          Chats[]
+  Jobs           Jobs[]
+  Notifications  Notifications[]
+}
+
+model Notifications {
   id        Int      @id @default(autoincrement())
   userId    Int
   jobId     Int
@@ -52,16 +64,4 @@ model Notices {
   updatedAt DateTime
   Jobs      Jobs     @relation(fields: [jobId], references: [id])
   Users     Users    @relation(fields: [userId], references: [id])
-}
-
-model Users {
-  id             Int       @id @default(autoincrement())
-  email          String    @unique
-  hashedPassword String
-  nickName       String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime
-  Chats          Chats[]
-  Jobs           Jobs[]
-  Notices        Notices[]
 }

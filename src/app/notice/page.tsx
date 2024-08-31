@@ -12,7 +12,7 @@ export type ApplicationsWithJob = Applications & {
   };
 };
 
-const NoticePage = () => {
+const NotificationPage = () => {
   const { applications, isError, isLoading, mutate } = useGetApplications();
 
   const updateApplicationStatus = async (
@@ -36,7 +36,7 @@ const NoticePage = () => {
   const addRejectedId = async (
     userId: number,
     jobId: number,
-    noticeId: number
+    notificationId: number
   ) => {
     try {
       await axios.patch(
@@ -44,7 +44,7 @@ const NoticePage = () => {
         {
           rejectedId: userId,
           jobId: jobId,
-          noticeId: noticeId,
+          notificationId: notificationId,
         }
       );
       mutate();
@@ -176,4 +176,4 @@ const NoticePage = () => {
   );
 };
 
-export default NoticePage;
+export default NotificationPage;
