@@ -11,9 +11,8 @@ const LoginModal = ({
   isModalOpen: boolean;
   setIsModalOpen: (isModalOpen: boolean) => void;
 }) => {
-  const [cookie, setCookie] = useState<any>();
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [isRegister, setIsRegister] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
     register,
     handleSubmit,
@@ -21,7 +20,14 @@ const LoginModal = ({
   } = useForm<any>();
   const { user, mutate } = useGetUser();
 
+  // isRegisterの状態を変更する関数を新しく定義
+  const toggleRegister = () => {
+    setIsRegister(!isRegister);
+    setErrorMessage(null); // エラーメッセージをリセット
+  };
+
   const onSubmit: SubmitHandler<any> = async data => {
+    setErrorMessage(null); // エラーメッセージをリセット
     try {
       if (isRegister) {
         await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/signup`, {
@@ -34,11 +40,26 @@ const LoginModal = ({
         email: data.email,
         password: data.password,
       });
-      // ログイン成功後の処理をここに記述[
+      // ログイン成功後の処理
       mutate();
       setIsModalOpen(false);
     } catch (error) {
-      console.log(error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.log(555555, error.response.status);
+        const statusCode = error.response.status;
+        switch (statusCode) {
+          case 403:
+            setErrorMessage('メールアドレスまたはパスワードが間違っています。');
+            break;
+          default:
+            setErrorMessage('ログインに失敗しました。もう一度お試しください。');
+        }
+      } else {
+        setErrorMessage(
+          '予期せぬエラーが発生しました。しばらく経ってからもう一度お試しください。'
+        );
+      }
+      console.error(error);
     }
   };
 
@@ -183,12 +204,18 @@ const LoginModal = ({
 
                 <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
                   <div
-                    onClick={() => setIsRegister(!isRegister)}
+                    onClick={toggleRegister} // ここを変更
                     className="cursor-pointer text-blue-700 hover:underline dark:text-blue-500"
                   >
                     {isRegister ? 'ログイン' : '会員登録'}はこちら
                   </div>
                 </div>
+
+                {errorMessage && (
+                  <div className="text-red-500 text-sm mt-2">
+                    {errorMessage}
+                  </div>
+                )}
               </form>
             </div>
           </div>
