@@ -7,7 +7,7 @@ import JobCard from '../components/JobCard';
 import RecruitmentButton from '../components/RecruitmentButton'; // New import statement
 import { CreditCardForm } from '@/app/components/CreditCardForm';
 import useSWR from 'swr';
-import { JobWithApplications, useGetJobs } from '@/app/hooks/useGetJobs';
+import { JobModel, useGetJobs } from '@/app/hooks/useGetJobs';
 import Image from 'next/image';
 import {
   differenceInHours,
@@ -39,7 +39,7 @@ export default function Home() {
   console.log(22222);
   console.log(22222);
   console.log(22222);
-  console.log(22222);
+  console.log(jobs);
 
   if (isError) return <div>failed to load</div>;
   if (isLoading)
@@ -111,7 +111,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center px-4">
       <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
         <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-2">
-          {jobs.map((job: JobWithApplications, index: number) => (
+          {jobs.map((job: JobModel, index: number) => (
             <div
               className="max-w-sm rounded overflow-hidden shadow-lg bg-white mt-8"
               key={index}
@@ -127,14 +127,13 @@ export default function Home() {
                     (user.id === job.userId ? (
                       job.applications.length > 0 &&
                       job.applications.filter(
-                        (application: Applications) =>
-                          application.status === true
+                        (application: Applications) => application.status
                       ).length > 0 ? (
                         <Link
-                          href="/chat"
+                          href={`/chat/${job.chats[0].roomId}`}
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
                         >
-                          チャット
+                          チャットする
                         </Link>
                       ) : job.applications.length > 0 &&
                         job.applications.filter(
@@ -159,14 +158,14 @@ export default function Home() {
                       )
                     ) : job.applications.length > 0 &&
                       // statusがtrueなものがあれば、投稿者とチャットを表示
-                      job.applications.filter((application: Applications) => {
-                        return application.status === true;
-                      }).length > 0 ? (
+                      job.applications.filter(
+                        (application: Applications) => application.status
+                      ).length > 0 ? (
                       <Link
-                        href="/chat"
+                        href={`/chat/${job.chats[0].roomId}`}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
                       >
-                        チャット
+                        チャットする
                       </Link>
                     ) : job.applications.length > 0 &&
                       job.applications.filter(
@@ -175,7 +174,7 @@ export default function Home() {
                           application.status === false
                       ).length > 0 ? (
                       <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
-                        不採用
+                        不承認
                       </div>
                     ) : job.applications.length > 0 &&
                       job.applications.filter(

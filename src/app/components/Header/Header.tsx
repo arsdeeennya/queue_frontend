@@ -16,6 +16,7 @@ const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRecruitModalOpen, setIsRecruitModalOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const router = useRouter();
 
   // const {
   //   newNotices,
@@ -32,6 +33,7 @@ const Header = () => {
     try {
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
       mutate(undefined);
+      router.push('/');
     } catch (error) {}
   };
 

@@ -19,11 +19,13 @@ model Applications {
 
 model Chats {
   id        Int      @id @default(autoincrement())
-  roomNum   Int
   text      String
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime
+  roomId    String
+  jobId     Int
+  Jobs      Jobs     @relation(fields: [jobId], references: [id])
   Users     Users    @relation(fields: [userId], references: [id])
 }
 
@@ -39,6 +41,7 @@ model Jobs {
   createdAt     DateTime        @default(now())
   updatedAt     DateTime
   Applications  Applications[]
+  Chats         Chats[]
   Users         Users           @relation(fields: [userId], references: [id])
   Notifications Notifications[]
 }
@@ -56,12 +59,19 @@ model Users {
 }
 
 model Notifications {
-  id        Int      @id @default(autoincrement())
+  id        Int              @id @default(autoincrement())
   userId    Int
   jobId     Int
-  status    Boolean?
-  createdAt DateTime @default(now())
+  createdAt DateTime         @default(now())
   updatedAt DateTime
-  Jobs      Jobs     @relation(fields: [jobId], references: [id])
-  Users     Users    @relation(fields: [userId], references: [id])
+  type      NotificationType
+  Jobs      Jobs             @relation(fields: [jobId], references: [id])
+  Users     Users            @relation(fields: [userId], references: [id])
+}
+
+enum NotificationType {
+  APPLICATION
+  APPROVAL
+  REJECT
+  COMPLETED
 }
