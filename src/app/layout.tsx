@@ -9,7 +9,12 @@ import Cookies from 'js-cookie';
 import { useGetUser } from '@/app/hooks/useGetUser';
 import Header from './components/Header/Header';
 
+
+// 'Inter'フォントをGoogle Fontsからインポートし、'latin'サブセットを使用する設定を行っています。
+// これにより、'inter.className'を使ってこのフォントを適用することができます。
+// アプリケーション全体のフォントを設定するために使用されます。
 const inter = Inter({ subsets: ['latin'] });
+
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',

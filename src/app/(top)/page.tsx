@@ -34,13 +34,6 @@ export default function Home() {
   const { applications, isLoading: isLoadingApplications } =
     useGetApplications();
 
-  console.log(22222);
-  console.log(22222);
-  console.log(22222);
-  console.log(22222);
-  console.log(22222);
-  console.log(jobs);
-
   if (isError) return <div>failed to load</div>;
   if (isLoading)
     return (
