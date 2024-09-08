@@ -150,9 +150,10 @@ export default function Home() {
                         </div>
                       )
                     ) : job.applications.length > 0 &&
-                      // statusがtrueなものがあれば、投稿者とチャットを表示
+                      // 自分が応募しててstatusがtrueだったとき
                       job.applications.filter(
-                        (application: Applications) => application.status
+                        (application: Applications) =>
+                          application.userId === user.id && application.status
                       ).length > 0 ? (
                       <Link
                         href={`/chat/${job.chats[0].roomId}`}
@@ -177,6 +178,14 @@ export default function Home() {
                       ).length > 0 ? (
                       <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
                         応募済
+                      </div>
+                    ) : job.applications.filter(
+                        (application: Applications) =>
+                          application.userId !== user.id &&
+                          application.status === true
+                      ).length > 0 ? (
+                      <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                        募集終了
                       </div>
                     ) : (
                       <div

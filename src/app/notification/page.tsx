@@ -52,11 +52,6 @@ const NotificationPage = () => {
   };
 
   const { user } = useGetUser();
-  // console.log(11111111);
-  // console.log(11111111);
-  // console.log(11111111);
-  // console.log(11111111);
-  // console.log(applications);
 
   if (isLoading)
     return (
@@ -70,8 +65,8 @@ const NotificationPage = () => {
 
   if (!applications || applications.length === 0)
     return (
-      <div className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8">
-        <div className="text-sm">
+      <div className="h-screen flex flex-col">
+        <div className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8">
           <h1 className="text-xl font-bold text-center">通知がありません。</h1>
         </div>
       </div>
