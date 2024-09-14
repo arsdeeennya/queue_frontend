@@ -33,7 +33,8 @@ export default function Home() {
   const { user, isLoading: isLoadingUser } = useGetUser();
   const { applications, isLoading: isLoadingApplications } =
     useGetApplications();
-
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
   if (isError) return <div>failed to load</div>;
   if (isLoading)
     return (
@@ -49,27 +50,10 @@ export default function Home() {
   const handlePatchRequest = async (jobId: number) => {
     if (user && user.id) {
       try {
-        const res1 = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}/application`,
-          {
-            jobId: jobId,
-          }
-        );
-        // const res2 = await axios.post(
-        //   `${process.env.NEXT_PUBLIC_API_URL}/notice`,
-        //   {
-        //     jobId: jobId,
-        //     userId: userId,
-        //   }
-        // );
-
-        console.log('成功:', res1);
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/application`, {
+          jobId: jobId,
+        });
         mutate();
-
-        // const res2 = await axios.post('http://localhost:3001/notice', {
-        //   jobId: jobId,
-        // });
-        // console.log('成功:', res2);
       } catch (error) {
         console.error('エラー:', error);
       }
@@ -99,6 +83,23 @@ export default function Home() {
       console.log('ユーザーがログインしていません。');
     }
   };
+
+  const handleConfirmDialog = (jobId: number) => {
+    setSelectedJobId(jobId);
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirm = async () => {
+    if (selectedJobId !== null) {
+      await handlePatchRequest(selectedJobId);
+    }
+    setShowConfirmDialog(false);
+  };
+
+  const handleCancel = () => {
+    setShowConfirmDialog(false);
+  };
+
   console.log(jobs);
   return (
     <main className="flex min-h-screen flex-col items-center px-4">
@@ -177,7 +178,7 @@ export default function Home() {
                           application.status === null
                       ).length > 0 ? (
                       <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
-                        応募済
+                        取り消す
                       </div>
                     ) : job.applications.filter(
                         (application: Applications) =>
@@ -190,7 +191,7 @@ export default function Home() {
                     ) : (
                       <div
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
-                        onClick={() => handlePatchRequest(job.id)}
+                        onClick={() => handleConfirmDialog(job.id)}
                       >
                         ここに並ぶ
                       </div>
@@ -208,7 +209,7 @@ export default function Home() {
                     {differenceInMinutes(job.endDate, job.startDate) % 60}分)
                   </div>
                   <div className="rounded-full py-1 text-sm font-semibold text-gray-700">
-                    ・金額：{job.price.toLocaleString()}円
+                    ��金額：{job.price.toLocaleString()}円
                   </div>
                 </div>
                 <p className="text-gray-700 text-base">
@@ -219,6 +220,27 @@ export default function Home() {
           ))}
         </div>
       </div>
+      {showConfirmDialog && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-6 rounded-lg">
+            <p className="mb-4">本当にここに並びますか？</p>
+            <div className="flex justify-end">
+              <button
+                className="mr-2 px-4 py-2 bg-gray-200 rounded"
+                onClick={handleCancel}
+              >
+                いいえ
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+                onClick={handleConfirm}
+              >
+                はい
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <LoginModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </main>
   );
