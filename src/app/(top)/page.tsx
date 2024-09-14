@@ -25,6 +25,7 @@ import axios from 'axios';
 import { Applications, Jobs } from '@prisma/client';
 import { useGetApplications } from '@/app/hooks/useGetApplications';
 import { cookies } from 'next/headers';
+import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,6 +36,43 @@ export default function Home() {
     useGetApplications();
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
+  const [showCancelConfirmDialog, setShowCancelConfirmDialog] = useState(false);
+  const [selectedCancelJobId, setSelectedCancelJobId] = useState<number | null>(
+    null
+  );
+
+  const [confirmationModal, setConfirmationModal] = useState<{
+    isOpen: boolean;
+    message: string;
+    onConfirm: () => void;
+  }>({
+    isOpen: false,
+    message: '',
+    onConfirm: () => {},
+  });
+
+  const openConfirmationModal = (message: string, onConfirm: () => void) => {
+    setConfirmationModal({ isOpen: true, message, onConfirm });
+  };
+
+  const closeConfirmationModal = () => {
+    setConfirmationModal({ isOpen: false, message: '', onConfirm: () => {} });
+  };
+
+  const handleConfirmDialog = (jobId: number) => {
+    openConfirmationModal('本当にここに並びますか？', async () => {
+      await handlePatchRequest(jobId);
+      closeConfirmationModal();
+    });
+  };
+
+  const handleCancelConfirmDialog = (jobId: number) => {
+    openConfirmationModal('本当に取り消しますか？', async () => {
+      await handleCancelApplication(jobId);
+      closeConfirmationModal();
+    });
+  };
+
   if (isError) return <div>failed to load</div>;
   if (isLoading)
     return (
@@ -84,20 +122,23 @@ export default function Home() {
     }
   };
 
-  const handleConfirmDialog = (jobId: number) => {
-    setSelectedJobId(jobId);
-    setShowConfirmDialog(true);
-  };
-
-  const handleConfirm = async () => {
-    if (selectedJobId !== null) {
-      await handlePatchRequest(selectedJobId);
+  const handleCancelApplication = async (jobId: number) => {
+    console.log('jobId', jobId);
+    if (user && user.id) {
+      try {
+        await axios.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/application/cancel`,
+          {
+            jobId: jobId,
+          }
+        );
+        mutate();
+      } catch (error) {
+        console.error('取り消しエラー:', error);
+      }
+    } else {
+      console.log('ユーザーがログインしていません。');
     }
-    setShowConfirmDialog(false);
-  };
-
-  const handleCancel = () => {
-    setShowConfirmDialog(false);
   };
 
   console.log(jobs);
@@ -177,7 +218,10 @@ export default function Home() {
                           application.userId === user.id &&
                           application.status === null
                       ).length > 0 ? (
-                      <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
+                      <div
+                        className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 border border-yellow-700 rounded cursor-pointer"
+                        onClick={() => handleCancelConfirmDialog(job.id)}
+                      >
                         取り消す
                       </div>
                     ) : job.applications.filter(
@@ -209,7 +253,7 @@ export default function Home() {
                     {differenceInMinutes(job.endDate, job.startDate) % 60}分)
                   </div>
                   <div className="rounded-full py-1 text-sm font-semibold text-gray-700">
-                    ��金額：{job.price.toLocaleString()}円
+                    金額：{job.price.toLocaleString()}円
                   </div>
                 </div>
                 <p className="text-gray-700 text-base">
@@ -220,27 +264,12 @@ export default function Home() {
           ))}
         </div>
       </div>
-      {showConfirmDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-6 rounded-lg">
-            <p className="mb-4">本当にここに並びますか？</p>
-            <div className="flex justify-end">
-              <button
-                className="mr-2 px-4 py-2 bg-gray-200 rounded"
-                onClick={handleCancel}
-              >
-                いいえ
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-500 text-white rounded"
-                onClick={handleConfirm}
-              >
-                はい
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationModal
+        isOpen={confirmationModal.isOpen}
+        onClose={closeConfirmationModal}
+        onConfirm={confirmationModal.onConfirm}
+        message={confirmationModal.message}
+      />
       <LoginModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </main>
   );
