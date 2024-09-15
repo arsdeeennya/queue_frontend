@@ -7,26 +7,23 @@ import {
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useGetUser } from '../hooks/useGetUser';
-import { Applications, Chats, Jobs, Users } from '@prisma/client';
 import Link from 'next/link';
-import { ApplicationModel } from '@/app/hooks/useGetApplications';
 
 const NotificationPage = () => {
   const { notifications, isError, isLoading, mutate } = useGetNotifications();
   const updateApplicationStatus = async (
     applicationId: number,
     jobId: number,
+    applicationUserId: number,
     status: boolean
   ) => {
     try {
-      await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/application/updateStatus`,
-        {
-          applicationId: applicationId,
-          jobId: jobId,
-          status: status,
-        }
-      );
+      await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/application`, {
+        applicationId: applicationId,
+        jobId: jobId,
+        applicationUserId: applicationUserId,
+        status: status,
+      });
       mutate();
     } catch (error) {
       console.error('エラー:', error);
@@ -74,11 +71,14 @@ const NotificationPage = () => {
       </div>
     );
 
-  // // 通知を日付順にソート
-  // const sortedNotifications = notifications.sort((a, b) => {
-  //   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-  // });
-  console.log(notifications.data);
+  notifications.data = notifications.data.map(
+    (notification: NotificationModel) => {
+      notification.jobs.applications = notification.jobs.applications.filter(
+        application => application.id === notification.applicationId
+      );
+      return notification;
+    }
+  );
 
   return (
     <main className="min-h-screen px-4">
@@ -159,6 +159,7 @@ const NotificationPage = () => {
                       updateApplicationStatus(
                         notification.jobs.applications[0].id,
                         notification.jobs.id,
+                        notification.jobs.applications[0].users.id,
                         true
                       )
                     }
@@ -171,6 +172,7 @@ const NotificationPage = () => {
                       updateApplicationStatus(
                         notification.jobs.applications[0].id,
                         notification.jobs.id,
+                        notification.jobs.applications[0].users.id,
                         false
                       )
                     }
@@ -180,10 +182,7 @@ const NotificationPage = () => {
                 </div>
               )}
               <div className="text-right mt-3">
-                {format(
-                  notification.jobs.applications[0].createdAt,
-                  'yyyy年MM月dd日HH時mm分ss秒'
-                )}
+                {format(notification.createdAt, 'yyyy年MM月dd日HH時mm分ss秒')}
               </div>
             </div>
           )
