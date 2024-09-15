@@ -1,45 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
 // import 'react-credit-cards-2/es/styles-compiled.css';
-import JobCard from '../components/JobCard';
-import RecruitmentButton from '../components/RecruitmentButton'; // New import statement
-import { CreditCardForm } from '@/app/components/CreditCardForm';
-import useSWR from 'swr';
 import { JobModel, useGetJobs } from '@/app/hooks/useGetJobs';
-import Image from 'next/image';
-import {
-  differenceInHours,
-  differenceInMinutes,
-  format,
-  getDate,
-  getMonth,
-  getYear,
-} from 'date-fns';
+import { differenceInHours, differenceInMinutes, format } from 'date-fns';
 import Link from 'next/link';
 import { useGetUser } from '@/app/hooks/useGetUser';
 import LoginModal from '../components/Modal/LoginModal';
-// import Modal from '@/components/Modal'; // モーダルコンポーネントのインポート
 import axios from 'axios';
-import { Applications, Jobs } from '@prisma/client';
+import { Applications } from '@prisma/client';
 import { useGetApplications } from '@/app/hooks/useGetApplications';
-import { cookies } from 'next/headers';
 import ConfirmationModal from '../components/ConfirmationModal';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegister, setIsRegister] = useState(false);
   const { jobs, isError, isLoading, mutate } = useGetJobs();
   const { user, isLoading: isLoadingUser } = useGetUser();
-  const { applications, isLoading: isLoadingApplications } =
-    useGetApplications();
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
-  const [showCancelConfirmDialog, setShowCancelConfirmDialog] = useState(false);
-  const [selectedCancelJobId, setSelectedCancelJobId] = useState<number | null>(
-    null
-  );
 
   const [confirmationModal, setConfirmationModal] = useState<{
     isOpen: boolean;
@@ -73,6 +49,13 @@ export default function Home() {
     });
   };
 
+  const handleDeleteConfirmDialog = (jobId: number) => {
+    openConfirmationModal('本当に削除しますか？', async () => {
+      await handleDeleteRequest(jobId);
+      closeConfirmationModal();
+    });
+  };
+
   if (isError) return <div>failed to load</div>;
   if (isLoading)
     return (
@@ -101,7 +84,6 @@ export default function Home() {
   };
 
   const handleDeleteRequest = async (jobId: number) => {
-    console.log('jobId', jobId);
     if (user && user.id) {
       try {
         const res = await axios.delete(
@@ -112,7 +94,6 @@ export default function Home() {
             },
           }
         );
-        console.log('削除成功:', res);
         mutate();
       } catch (error) {
         console.error('削除エラー:', error);
@@ -123,7 +104,6 @@ export default function Home() {
   };
 
   const handleCancelApplication = async (jobId: number) => {
-    console.log('jobId', jobId);
     if (user && user.id) {
       try {
         await axios.patch(
@@ -141,7 +121,6 @@ export default function Home() {
     }
   };
 
-  console.log(jobs);
   return (
     <main className="flex min-h-screen flex-col items-center px-4">
       <div className="flex flex-col items-center justify-center space-y-4 rounded-xl">
@@ -185,7 +164,7 @@ export default function Home() {
                         <div className="flex items-center">
                           <button
                             className="ml-2 bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border border-red-700 rounded"
-                            onClick={() => handleDeleteRequest(job.id)}
+                            onClick={() => handleDeleteConfirmDialog(job.id)}
                           >
                             削除する
                           </button>

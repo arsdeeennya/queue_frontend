@@ -20,7 +20,6 @@ const RecruitModal = ({
 
   const onSubmit: SubmitHandler<any> = async data => {
     try {
-      console.log(data);
       await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/job`, {
         description: data.description,
         price: Number(data.price),

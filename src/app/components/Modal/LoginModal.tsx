@@ -45,7 +45,6 @@ const LoginModal = ({
       setIsModalOpen(false);
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.log(555555, error.response.status);
         const statusCode = error.response.status;
         switch (statusCode) {
           case 403:

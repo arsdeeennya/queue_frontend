@@ -9,12 +9,10 @@ import Cookies from 'js-cookie';
 import { useGetUser } from '@/app/hooks/useGetUser';
 import Header from './components/Header/Header';
 
-
 // 'Inter'フォントをGoogle Fontsからインポートし、'latin'サブセットを使用する設定を行っています。
 // これにより、'inter.className'を使ってこのフォントを適用することができます。
 // アプリケーション全体のフォントを設定するために使用されます。
 const inter = Inter({ subsets: ['latin'] });
-
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -31,14 +29,17 @@ export default function RootLayout({
   const { user, isError, isLoading } = useGetUser();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-
   useEffect(() => {
     const getCsrfToken = async () => {
-      const { data } = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/auth/csrf`
-      );
-      // ここでheaderにcsrf-tokenを設定する
-      axios.defaults.headers.common['csrf-token'] = data.csrfToken;
+      try {
+        const { data } = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/auth/csrf`
+        );
+        // ここでheaderにcsrf-tokenを設定する
+        axios.defaults.headers.common['csrf-token'] = data.csrfToken;
+      } catch (error) {
+        console.error('CSRFトークンの取得に失敗しました:', error);
+      }
     };
     getCsrfToken();
     if (Cookies.get('access_token')) {

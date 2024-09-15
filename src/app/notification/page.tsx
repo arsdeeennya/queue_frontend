@@ -10,7 +10,6 @@ import { ApplicationModel } from '@/app/hooks/useGetApplications';
 
 const NotificationPage = () => {
   const { applications, isError, isLoading, mutate } = useGetApplications();
-  console.log(11111, applications);
   const updateApplicationStatus = async (
     applicationId: number,
     jobId: number,
