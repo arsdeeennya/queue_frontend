@@ -13,7 +13,7 @@ const Header = () => {
   const {
     user,
     isLoading,
-    notifications,
+    unreadNotifications,
     isLoginModalOpen,
     isRecruitModalOpen,
     dropdownOpen,
@@ -33,10 +33,10 @@ const Header = () => {
             <LoadingSpinner />
           ) : (
             <div>
-              {user && notifications ? (
+              {user && unreadNotifications ? (
                 <AuthenticatedMenu
                   user={user}
-                  notifications={notifications}
+                  unreadNotifications={unreadNotifications}
                   dropdownOpen={dropdownOpen}
                   setDropdownOpen={setDropdownOpen}
                   setIsRecruitModalOpen={setIsRecruitModalOpen}
@@ -90,14 +90,14 @@ const LoadingSpinner = () => (
 
 const AuthenticatedMenu = ({
   user,
-  notifications,
+  unreadNotifications,
   dropdownOpen,
   setDropdownOpen,
   setIsRecruitModalOpen,
   onSubmit,
 }: {
   user: UserModel;
-  notifications: NotificationModel[];
+  unreadNotifications: NotificationModel[];
   dropdownOpen: boolean;
   setDropdownOpen: (isOpen: boolean) => void;
   setIsRecruitModalOpen: (isOpen: boolean) => void;
@@ -106,7 +106,7 @@ const AuthenticatedMenu = ({
   <>
     <div className="flex justify-end">
       <RecruitButton setIsRecruitModalOpen={setIsRecruitModalOpen} />
-      <NotificationIcon notifications={notifications} />
+      <NotificationIcon unreadNotifications={unreadNotifications} />
       <UserDropdown
         user={user}
         dropdownOpen={dropdownOpen}
@@ -131,9 +131,9 @@ const RecruitButton = ({
 );
 
 const NotificationIcon = ({
-  notifications,
+  unreadNotifications,
 }: {
-  notifications: NotificationModel[];
+  unreadNotifications: NotificationModel[];
 }) => (
   <Link
     href="/notification"
@@ -141,9 +141,11 @@ const NotificationIcon = ({
   >
     <TbBell
       size="30"
-      fill={notifications && notifications.length > 0 ? 'red' : 'gray'}
+      fill={
+        unreadNotifications && unreadNotifications.length > 0 ? 'red' : 'gray'
+      }
     />
-    {notifications && notifications.length > 0 && (
+    {unreadNotifications && unreadNotifications.length > 0 && (
       <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
         <FiAlertCircle size="14" />
       </span>

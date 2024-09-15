@@ -1,12 +1,9 @@
 'use client';
-import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Link from 'next/link';
 import Cookies from 'js-cookie';
-import { useGetUser } from '@/app/hooks/useGetUser';
 import Header from './components/Header/Header';
 
 // 'Inter'フォントをGoogle Fontsからインポートし、'latin'サブセットを使用する設定を行っています。
@@ -26,9 +23,6 @@ export default function RootLayout({
 }>) {
   axios.defaults.withCredentials = true;
   const [cookie, setCookie] = useState<any>();
-  const { user, isError, isLoading } = useGetUser();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   useEffect(() => {
     const getCsrfToken = async () => {
       try {
@@ -46,12 +40,6 @@ export default function RootLayout({
       setCookie(Cookies.get('access_token'));
     }
   }, []);
-
-  const onSubmit = async () => {
-    try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/logout`);
-    } catch (error) {}
-  };
 
   return (
     <html lang="en">

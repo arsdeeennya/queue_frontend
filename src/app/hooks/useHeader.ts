@@ -10,8 +10,10 @@ export const useHeader = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
-  const { notifications, isLoading: isNotificationsLoading } =
-    useGetNotifications(true); // 未読の通知のみを取得
+  const {
+    notifications: unreadNotifications,
+    isLoading: isNotificationsLoading,
+  } = useGetNotifications(true); // 未読の通知のみを取得
   const { user, isLoading: isUserLoading, mutate } = useGetUser();
 
   const onSubmit = async () => {
@@ -40,14 +42,12 @@ export const useHeader = () => {
     };
   }, [dropdownOpen]);
 
-
-
   const isLoading = isUserLoading || isNotificationsLoading;
 
   return {
     user,
     isLoading,
-    notifications,
+    unreadNotifications,
     isLoginModalOpen,
     isRecruitModalOpen,
     dropdownOpen,
