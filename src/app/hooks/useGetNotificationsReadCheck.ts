@@ -8,7 +8,10 @@ export function useGetNotificationsReadCheck(read: boolean) {
     );
     return res;
   };
-  const { data, error, isLoading, mutate } = useSWR<any>(`/notification/read`, fetcher);
+  const { data, error, isLoading, mutate } = useSWR<any>(
+    `/notification/read`,
+    fetcher
+  );
 
   // 呼び出し元で命名した方が、いい
   return {

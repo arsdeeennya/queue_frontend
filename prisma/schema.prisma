@@ -15,6 +15,7 @@ model Applications {
   createdAt DateTime @default(now())
   updatedAt DateTime
   Jobs      Jobs     @relation(fields: [jobId], references: [id])
+  Users     Users    @relation(fields: [userId], references: [id])
 }
 
 model Chats {
@@ -53,6 +54,7 @@ model Users {
   nickName       String?
   createdAt      DateTime        @default(now())
   updatedAt      DateTime
+  Applications   Applications[]
   Chats          Chats[]
   Jobs           Jobs[]
   Notifications  Notifications[]

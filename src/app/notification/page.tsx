@@ -1,6 +1,9 @@
 'use client';
 import React from 'react';
-import { useGetApplications } from '@/app/hooks/useGetApplications';
+import {
+  NotificationModel,
+  useGetNotifications,
+} from '@/app/hooks/useGetNotifications';
 import axios from 'axios';
 import { format } from 'date-fns';
 import { useGetUser } from '../hooks/useGetUser';
@@ -9,7 +12,7 @@ import Link from 'next/link';
 import { ApplicationModel } from '@/app/hooks/useGetApplications';
 
 const NotificationPage = () => {
-  const { applications, isError, isLoading, mutate } = useGetApplications();
+  const { notifications, isError, isLoading, mutate } = useGetNotifications();
   const updateApplicationStatus = async (
     applicationId: number,
     jobId: number,
@@ -62,7 +65,7 @@ const NotificationPage = () => {
       </div>
     );
 
-  if (!applications || applications.length === 0)
+  if (!notifications || notifications.data.length === 0)
     return (
       <div className="h-screen flex flex-col">
         <div className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8">
@@ -71,18 +74,18 @@ const NotificationPage = () => {
       </div>
     );
 
-  // 自分の申請ならupdatedAt, 自分の申請でないならcreatedAtを取得して、降順ソートする
-  const sortedApplications = applications.sort((a, b) => {
-    const dateA = a.userId === user?.id ? a.updatedAt : a.createdAt;
-    const dateB = b.userId === user?.id ? b.updatedAt : b.createdAt;
-    return new Date(dateB).getTime() - new Date(dateA).getTime();
-  });
+  // // 通知を日付順にソート
+  // const sortedNotifications = notifications.sort((a, b) => {
+  //   return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+  // });
+  console.log(notifications.data);
 
   return (
     <main className="min-h-screen px-4">
-      {sortedApplications.length > 0 &&
-        sortedApplications.map((application: ApplicationModel, index: number) =>
-          application.userId === user?.id && application.status !== null ? (
+      {notifications.data.map(
+        (notification: NotificationModel, index: number) =>
+          notification.userId === user?.id &&
+          notification.jobs.applications[0].status !== null ? (
             <div
               className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8"
               key={index}
@@ -91,14 +94,14 @@ const NotificationPage = () => {
                 <h1 className="text-xl font-bold text-center mb-4">お知らせ</h1>
               </div>
               <p className="text-md mb-6 font-medium">
-                {format(application.jobs.startDate, 'M月d日')}の
-                {application.jobs.location}に応募した結果、承諾
-                {application.status
-                  ? `されました。${application.jobs.users.nickName}さんへ、チャット画面でメッセージを送信してください。`
+                {format(notification.jobs.startDate, 'M月d日')}の
+                {notification.jobs.location}に応募した結果、承諾
+                {notification.jobs.applications[0].status
+                  ? `されました。${notification.users.nickName}さんへ、チャット画面でメッセージを送信してください。`
                   : 'されませんでした。'}
                 <br />
-                {application.status && (
-                  <Link href={`/chat/${application.jobs.chats[0].roomId}`}>
+                {notification.jobs.applications[0].status && (
+                  <Link href={`/chat/${notification.jobs.chats[0].roomId}`}>
                     <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded">
                       チャット画面へ
                     </button>
@@ -106,7 +109,7 @@ const NotificationPage = () => {
                 )}
               </p>
               <div className="text-right mt-3">
-                {format(application.updatedAt, 'yyyy年MM月dd日HH時mm分ss秒')}
+                {format(notification.updatedAt, 'yyyy年MM月dd日HH時mm分ss秒')}
               </div>
             </div>
           ) : (
@@ -118,15 +121,16 @@ const NotificationPage = () => {
                 <h1 className="text-xl font-bold text-center mb-4">お知らせ</h1>
               </div>
               <p className="text-md mb-6 font-medium">
-                {format(application.jobs.startDate, 'M月d日')}に
-                {application.jobs.location}
-                で並ぶことができるユーザー({application.jobs.users.nickName}
+                {format(notification.jobs.startDate, 'M月d日')}に
+                {notification.jobs.location}
+                で並ぶことができるユーザー(
+                {notification.jobs.applications[0].users.nickName}
                 さん)が見つかりました。
                 このユーザーに依頼する場合は「はい」を選択、
                 依頼しない場合は「いいえ」を選択してください。
               </p>
 
-              {application.status ? (
+              {notification.jobs.applications[0].status ? (
                 <>
                   <div className="text-left mb-4">
                     <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded">
@@ -134,13 +138,13 @@ const NotificationPage = () => {
                     </button>
                     を選択済み
                   </div>
-                  <Link href={`/chat/${application.jobs.chats[0].roomId}`}>
+                  <Link href={`/chat/${notification.jobs.chats[0].roomId}`}>
                     <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded">
                       チャット画面へ
                     </button>
                   </Link>
                 </>
-              ) : application.status === false ? (
+              ) : notification.jobs.applications[0].status === false ? (
                 <div className="text-right">
                   <button className="bg-red-500 text-white font-bold py-2 px-6 rounded">
                     いいえ
@@ -153,8 +157,8 @@ const NotificationPage = () => {
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded border-blue-700"
                     onClick={() =>
                       updateApplicationStatus(
-                        application.id,
-                        application.jobs.id,
+                        notification.jobs.applications[0].id,
+                        notification.jobs.id,
                         true
                       )
                     }
@@ -165,8 +169,8 @@ const NotificationPage = () => {
                     className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded"
                     onClick={() =>
                       updateApplicationStatus(
-                        application.id,
-                        application.jobs.id,
+                        notification.jobs.applications[0].id,
+                        notification.jobs.id,
                         false
                       )
                     }
@@ -176,11 +180,14 @@ const NotificationPage = () => {
                 </div>
               )}
               <div className="text-right mt-3">
-                {format(application.createdAt, 'yyyy年MM月dd日HH時mm分ss秒')}
+                {format(
+                  notification.jobs.applications[0].createdAt,
+                  'yyyy年MM月dd日HH時mm分ss秒'
+                )}
               </div>
             </div>
           )
-        )}
+      )}
     </main>
   );
 };
