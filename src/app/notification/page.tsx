@@ -7,8 +7,7 @@ import {
 import { useGetUser } from '../hooks/useGetUser';
 import LoadingSpinner from '../components/LoadingSpinner';
 import NoNotifications from './components/NoNotifications';
-import ApprovalRejectNotification from './components/ApprovalRejectNotification';
-import ApplicationNotification from './components/ApplicationNotification';
+import NotificationContent from './components/NotificationContent';
 
 const NotificationPage = () => {
   const { notifications, isLoading, mutate } = useGetNotifications();
@@ -36,24 +35,7 @@ const NotificationPage = () => {
             key={index}
             className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8"
           >
-            {(() => {
-              switch (notification.type) {
-                case 'APPROVAL':
-                case 'REJECT':
-                  return (
-                    <ApprovalRejectNotification notification={notification} />
-                  );
-                case 'APPLICATION':
-                  return (
-                    <ApplicationNotification
-                      notification={notification}
-                      mutate={mutate}
-                    />
-                  );
-                case 'CANCEL':
-                  return <>キャンセル</>;
-              }
-            })()}
+            <NotificationContent notification={notification} mutate={mutate} />
           </div>
         )
       )}
