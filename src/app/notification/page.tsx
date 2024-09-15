@@ -12,16 +12,12 @@ import Link from 'next/link';
 const NotificationPage = () => {
   const { notifications, isError, isLoading, mutate } = useGetNotifications();
   const updateApplicationStatus = async (
-    applicationId: number,
-    jobId: number,
-    applicationUserId: number,
+    notification: NotificationModel,
     status: boolean
   ) => {
     try {
       await axios.patch(`${process.env.NEXT_PUBLIC_API_URL}/application`, {
-        applicationId: applicationId,
-        jobId: jobId,
-        applicationUserId: applicationUserId,
+        notificationId: notification.id,
         status: status,
       });
       mutate();
@@ -155,27 +151,13 @@ const NotificationPage = () => {
                 <div className="flex justify-center space-x-4">
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded border-blue-700"
-                    onClick={() =>
-                      updateApplicationStatus(
-                        notification.jobs.applications[0].id,
-                        notification.jobs.id,
-                        notification.jobs.applications[0].users.id,
-                        true
-                      )
-                    }
+                    onClick={() => updateApplicationStatus(notification, true)}
                   >
                     はい
                   </button>
                   <button
                     className="bg-red-600 hover:bg-red-800 text-white font-bold py-2 px-6 rounded"
-                    onClick={() =>
-                      updateApplicationStatus(
-                        notification.jobs.applications[0].id,
-                        notification.jobs.id,
-                        notification.jobs.applications[0].users.id,
-                        false
-                      )
-                    }
+                    onClick={() => updateApplicationStatus(notification, false)}
                   >
                     いいえ
                   </button>
