@@ -10,7 +10,7 @@ import LoginModal from '../components/Modal/LoginModal';
 import axios from 'axios';
 import { Applications } from '@prisma/client';
 import { useGetApplications } from '@/app/hooks/useGetApplications';
-import ConfirmationModal from '../components/ConfirmationModal';
+import ConfirmationModal from '../components/Modal/ConfirmationModal';
 
 export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
