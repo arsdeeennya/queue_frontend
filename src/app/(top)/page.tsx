@@ -86,14 +86,11 @@ export default function Home() {
   const handleDeleteRequest = async (jobId: number) => {
     if (user && user.id) {
       try {
-        const res = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}/job`,
-          {
-            data: {
-              jobId: jobId,
-            },
-          }
-        );
+        await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/job`, {
+          data: {
+            jobId: jobId,
+          },
+        });
         mutate();
       } catch (error) {
         console.error('削除エラー:', error);
@@ -189,7 +186,7 @@ export default function Home() {
                           application.status === false
                       ).length > 0 ? (
                       <div className="bg-gray-500 text-white font-bold py-2 px-4 border border-gray-700 rounded cursor-not-allowed">
-                        不承認
+                        不承諾
                       </div>
                     ) : job.applications.length > 0 &&
                       job.applications.filter(

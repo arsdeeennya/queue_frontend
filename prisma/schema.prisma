@@ -74,4 +74,6 @@ enum NotificationType {
   APPROVAL
   REJECT
   COMPLETED
+  CANCEL
+  DELETE
 }
