@@ -24,7 +24,7 @@ const ApplicationNotification = ({
   };
 
   const isCancelled = notification.jobs.applications[0].deletedAt !== null;
-  console.log(notification);
+  console.log(notification, isCancelled);
   return (
     <>
       <div className="text-sm pb-2">

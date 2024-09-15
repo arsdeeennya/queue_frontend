@@ -17,6 +17,7 @@ const NotificationPage = () => {
   if (!notifications || notifications.data.length === 0)
     return <NoNotifications />;
 
+  // 複数ある応募の中から、通知に関係している応募のみを残す
   notifications.data = notifications.data.map(
     (notification: NotificationModel) => {
       notification.jobs.applications = notification.jobs.applications.filter(
@@ -26,7 +27,6 @@ const NotificationPage = () => {
     }
   );
 
-  console.log(notifications.data);
   return (
     <main className="min-h-screen px-4">
       {notifications.data.map(

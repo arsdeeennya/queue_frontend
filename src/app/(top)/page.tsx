@@ -149,7 +149,8 @@ export default function Home() {
                       ) : job.applications.length > 0 &&
                         job.applications.filter(
                           (application: Applications) =>
-                            application.status === null
+                            application.status === null &&
+                            application.deletedAt === null
                         ).length > 0 ? (
                         <Link
                           href="/notification"
