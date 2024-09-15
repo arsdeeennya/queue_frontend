@@ -12,7 +12,7 @@ const ApprovalRejectNotification = ({
   return (
     <>
       <div className="text-sm pb-2">
-        <h1 className="text-xl font-bold text-center mb-4">お知らせ</h1>
+        <h1 className="text-xl font-bold text-center mb-4">応募結果</h1>
       </div>
       <p className="text-md mb-6 font-medium">
         {format(notification.jobs.startDate, 'M月d日')}の

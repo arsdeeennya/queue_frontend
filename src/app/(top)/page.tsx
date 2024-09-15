@@ -231,7 +231,7 @@ export default function Home() {
                     {differenceInMinutes(job.endDate, job.startDate) % 60}分)
                   </div>
                   <div className="rounded-full py-1 text-sm font-semibold text-gray-700">
-                    金額：{job.price.toLocaleString()}円
+                    ・金額：{job.price.toLocaleString()}円
                   </div>
                 </div>
                 <p className="text-gray-700 text-base">
