@@ -14,6 +14,7 @@ export type NotificationModel = Notifications & {
       users: Users;
     })[];
     chats: Chats[];
+    users: Users;
   };
   users: Users;
 };
