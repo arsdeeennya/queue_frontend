@@ -4,21 +4,18 @@ import {
   NotificationModel,
   useGetNotifications,
 } from '@/app/hooks/useGetNotifications';
-import { useGetUser } from '../hooks/useGetUser';
 import LoadingSpinner from '../components/LoadingSpinner';
 import NoNotifications from './components/NoNotifications';
 import NotificationContent from './components/NotificationContent';
 
 const NotificationPage = () => {
   const { notifications, isLoading, mutate } = useGetNotifications();
-  const { user } = useGetUser();
 
   if (isLoading) return <LoadingSpinner />;
-  if (!notifications || notifications.data.length === 0)
-    return <NoNotifications />;
+  if (!notifications || notifications.length === 0) return <NoNotifications />;
 
-  // 複数ある応募の中から、通知に関係している応募のみを残す
-  notifications.data = notifications.data.map(
+  // 複数ある応募の中から
+  const notificationsFiltered = notifications.map(
     (notification: NotificationModel) => {
       notification.jobs.applications = notification.jobs.applications.filter(
         application => application.id === notification.applicationId
@@ -29,7 +26,7 @@ const NotificationPage = () => {
 
   return (
     <main className="min-h-screen px-4">
-      {notifications.data.map(
+      {notificationsFiltered.map(
         (notification: NotificationModel, index: number) => (
           <div
             key={index}

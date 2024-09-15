@@ -72,9 +72,9 @@ model Notifications {
   createdAt     DateTime         @default(now())
   updatedAt     DateTime
   type          NotificationType
-  read          Boolean?
   applicationId Int
   deletedAt     DateTime?
+  readAt        DateTime?
   Applications  Applications     @relation(fields: [applicationId], references: [id])
   Jobs          Jobs             @relation(fields: [jobId], references: [id])
   Users         Users            @relation(fields: [userId], references: [id])

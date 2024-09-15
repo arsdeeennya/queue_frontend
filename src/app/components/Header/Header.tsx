@@ -6,12 +6,14 @@ import { FiAlertCircle } from 'react-icons/fi';
 import LoginModal from '../Modal/LoginModal';
 import RecruitModal from '../Modal/RecruitModal';
 import { useHeader } from '@/app/hooks/useHeader';
+import { UserModel } from '@/app/hooks/useGetUser';
+import { NotificationModel } from '@/app/hooks/useGetNotifications';
 
 const Header = () => {
   const {
     user,
     isLoading,
-    pendingApplications,
+    notifications,
     isLoginModalOpen,
     isRecruitModalOpen,
     dropdownOpen,
@@ -31,10 +33,10 @@ const Header = () => {
             <LoadingSpinner />
           ) : (
             <div>
-              {user ? (
+              {user && notifications ? (
                 <AuthenticatedMenu
                   user={user}
-                  pendingApplications={pendingApplications}
+                  notifications={notifications}
                   dropdownOpen={dropdownOpen}
                   setDropdownOpen={setDropdownOpen}
                   setIsRecruitModalOpen={setIsRecruitModalOpen}
@@ -88,14 +90,14 @@ const LoadingSpinner = () => (
 
 const AuthenticatedMenu = ({
   user,
-  pendingApplications,
+  notifications,
   dropdownOpen,
   setDropdownOpen,
   setIsRecruitModalOpen,
   onSubmit,
 }: {
-  user: any; // ユーザー型を適切に定義する必要があります
-  pendingApplications: any[]; // 適切な型を定義する必要があります
+  user: UserModel;
+  notifications: NotificationModel[];
   dropdownOpen: boolean;
   setDropdownOpen: (isOpen: boolean) => void;
   setIsRecruitModalOpen: (isOpen: boolean) => void;
@@ -104,7 +106,7 @@ const AuthenticatedMenu = ({
   <>
     <div className="flex justify-end">
       <RecruitButton setIsRecruitModalOpen={setIsRecruitModalOpen} />
-      <NotificationIcon pendingApplications={pendingApplications} />
+      <NotificationIcon notifications={notifications} />
       <UserDropdown
         user={user}
         dropdownOpen={dropdownOpen}
@@ -129,9 +131,9 @@ const RecruitButton = ({
 );
 
 const NotificationIcon = ({
-  pendingApplications,
+  notifications,
 }: {
-  pendingApplications: any[];
+  notifications: NotificationModel[];
 }) => (
   <Link
     href="/notification"
@@ -139,11 +141,9 @@ const NotificationIcon = ({
   >
     <TbBell
       size="30"
-      fill={
-        pendingApplications && pendingApplications.length > 0 ? 'red' : 'gray'
-      }
+      fill={notifications && notifications.length > 0 ? 'red' : 'gray'}
     />
-    {pendingApplications && pendingApplications.length > 0 && (
+    {notifications && notifications.length > 0 && (
       <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
         <FiAlertCircle size="14" />
       </span>
@@ -156,7 +156,7 @@ const UserDropdown = ({
   dropdownOpen,
   setDropdownOpen,
 }: {
-  user: any;
+  user: UserModel;
   dropdownOpen: boolean;
   setDropdownOpen: (isOpen: boolean) => void;
 }) => (

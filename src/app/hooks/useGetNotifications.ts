@@ -19,18 +19,21 @@ export type NotificationModel = Notifications & {
   users: Users;
 };
 
-export function useGetNotifications() {
+export function useGetNotifications(unreadOnly: boolean = false) {
   const fetcher = async () => {
     const res = await axios.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/notification`
+      `${process.env.NEXT_PUBLIC_API_URL}/notification${
+        unreadOnly ? '?unreadOnly=true' : ''
+      }`
     );
-    return res;
+    return res.data;
   };
-  const { data, error, isLoading, mutate } = useSWR<any>(
-    `/notification`,
+
+  const { data, error, isLoading, mutate } = useSWR<NotificationModel[]>(
+    `/notification${unreadOnly ? '?unreadOnly=true' : ''}`,
     fetcher
   );
-  // 呼び出し元で命名した方が、いい
+
   return {
     notifications: data,
     isLoading,

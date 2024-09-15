@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { useGetUser } from './useGetUser';
-import { useGetApplications } from './useGetApplications';
+import { useGetNotifications } from './useGetNotifications';
 
 export const useHeader = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -10,8 +10,8 @@ export const useHeader = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
-  const { applications, isLoading: isApplicationsLoading } =
-    useGetApplications();
+  const { notifications, isLoading: isNotificationsLoading } =
+    useGetNotifications(true); // 未読の通知のみを取得
   const { user, isLoading: isUserLoading, mutate } = useGetUser();
 
   const onSubmit = async () => {
@@ -40,18 +40,14 @@ export const useHeader = () => {
     };
   }, [dropdownOpen]);
 
-  const pendingApplications =
-    applications?.filter(
-      application =>
-        application.jobs?.users?.id === user?.id && application.status === null
-    ) || [];
 
-  const isLoading = isUserLoading || isApplicationsLoading;
+
+  const isLoading = isUserLoading || isNotificationsLoading;
 
   return {
     user,
     isLoading,
-    pendingApplications,
+    notifications,
     isLoginModalOpen,
     isRecruitModalOpen,
     dropdownOpen,
