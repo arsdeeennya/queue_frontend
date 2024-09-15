@@ -43,7 +43,7 @@ export default function Home() {
   };
 
   const handleCancelConfirmDialog = (jobId: number) => {
-    openConfirmationModal('本当に取り消しますか？', async () => {
+    openConfirmationModal('本当にキャンセルしますか？', async () => {
       await handleCancelApplication(jobId);
       closeConfirmationModal();
     });
@@ -111,7 +111,7 @@ export default function Home() {
         );
         mutate();
       } catch (error) {
-        console.error('取り消しエラー:', error);
+        console.error('キャンセルエラー:', error);
       }
     } else {
       console.log('ユーザーがログインしていません。');
@@ -192,13 +192,14 @@ export default function Home() {
                       job.applications.filter(
                         (application: Applications) =>
                           application.userId === user.id &&
-                          application.status === null
+                          application.status === null &&
+                          application.deletedAt === null
                       ).length > 0 ? (
                       <div
                         className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 border border-yellow-700 rounded cursor-pointer"
                         onClick={() => handleCancelConfirmDialog(job.id)}
                       >
-                        取り消す
+                        キャンセル
                       </div>
                     ) : job.applications.filter(
                         (application: Applications) =>

@@ -50,8 +50,8 @@ const NotificationPage = () => {
                       mutate={mutate}
                     />
                   );
-                default:
-                  return null;
+                case 'CANCEL':
+                  return <>キャンセル</>;
               }
             })()}
           </div>
