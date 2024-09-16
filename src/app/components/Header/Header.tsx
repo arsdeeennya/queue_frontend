@@ -8,7 +8,6 @@ import RecruitModal from '../Modal/RecruitModal';
 import { useHeader } from '@/app/hooks/useHeader';
 import { UserModel } from '@/app/hooks/useGetUser';
 import { NotificationModel } from '@/app/hooks/useGetNotifications';
-import { usePathname, useRouter } from 'next/navigation';
 
 const Header = () => {
   const {
@@ -137,8 +136,6 @@ const NotificationIcon = ({
   unreadNotifications: NotificationModel[];
 }) => {
   //現在のURLを取得
-  const currentPath = usePathname();
-  const isNotificationPage = currentPath === '/notification';
   return (
     <Link
       href="/notification"
@@ -146,11 +143,9 @@ const NotificationIcon = ({
     >
       <TbBell
         size="30"
-        fill={
-          !isNotificationPage && unreadNotifications.length > 0 ? 'red' : 'gray'
-        }
+        fill={unreadNotifications.length > 0 ? 'red' : 'gray'}
       />
-      {!isNotificationPage &&unreadNotifications.length > 0 && (
+      {unreadNotifications.length > 0 && (
         <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
           {unreadNotifications.length}
         </span>
