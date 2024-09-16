@@ -9,7 +9,7 @@ const CancelNotification = ({
 }) => (
   <div className="flex flex-col">
     <div className="flex items-center mb-4 relative">
-      <h1 className="text-xl font-bold text-center flex-grow">応募通知</h1>
+      <h1 className="text-xl font-bold text-center flex-grow">キャンセル通知</h1>
       {!notification.readAt && (
         <div className="absolute right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
           新着メッセージ
