@@ -75,7 +75,7 @@ const RecruitModal = ({
                 onSubmit={handleSubmit(onSubmit)}
               >
                 <h3 className="text-xl font-medium text-gray-900 dark:text-white">
-                  並べる人を募集する
+                  並べる人を探す
                 </h3>
                 <div>
                   <label

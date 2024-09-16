@@ -28,7 +28,7 @@ const ApprovalRejectNotification = ({
         {notification.jobs.applications[0].status && (
           <Link href={`/chat/${notification.jobs.chats[0].roomId}`}>
             <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded mt-4">
-              チャット画面へ
+              ここを押してチャット画面に移動してください
             </button>
           </Link>
         )}

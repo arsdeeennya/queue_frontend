@@ -144,7 +144,7 @@ export default function Home() {
                           href={`/chat/${job.chats[0].roomId}`}
                           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
                         >
-                          チャットする
+                          チャット
                         </Link>
                       ) : job.applications.length > 0 &&
                         job.applications.filter(
@@ -178,7 +178,7 @@ export default function Home() {
                         href={`/chat/${job.chats[0].roomId}`}
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
                       >
-                        チャットする
+                        チャット
                       </Link>
                     ) : job.applications.length > 0 &&
                       job.applications.filter(

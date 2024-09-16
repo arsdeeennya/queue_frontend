@@ -126,7 +126,7 @@ const RecruitButton = ({
     onClick={() => setIsRecruitModalOpen(true)}
     className="cursor-pointer text-white bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 dark:focus:ring-blue-800 mr-4"
   >
-    並べる人を募集する
+    並べる人を探す
   </div>
 );
 
@@ -205,7 +205,7 @@ const UnauthenticatedMenu = ({
       onClick={() => setIsLoginModalOpen(true)}
       className="cursor-pointer text-white bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center inline-flex items-center dark:from-blue-600 dark:to-blue-500 dark:hover:from-blue-700 dark:hover:to-blue-600 dark:focus:ring-blue-800 mr-4"
     >
-      並べる人を募集する
+      並べる人を探す
     </div>
     <div
       onClick={() => setIsLoginModalOpen(true)}
