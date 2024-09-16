@@ -212,7 +212,7 @@ export default function Home() {
                       </div>
                     ) : (
                       <div
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded cursor-pointer"
+                        className="bg-teal-500 hover:bg-teal-700 text-white font-bold py-2 px-4 border border-teal-700 rounded cursor-pointer"
                         onClick={() => handleConfirmDialog(job.id)}
                       >
                         ここに並ぶ
