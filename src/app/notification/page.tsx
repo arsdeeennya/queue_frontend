@@ -7,6 +7,7 @@ import {
 import LoadingSpinner from '../components/LoadingSpinner';
 import NoNotifications from './components/NoNotifications';
 import NotificationContent from './components/NotificationContent';
+import { format } from 'date-fns';
 
 const NotificationPage = () => {
   const { notifications, isLoading, mutate } = useGetNotifications();
@@ -28,12 +29,20 @@ const NotificationPage = () => {
     <main className="min-h-screen px-4">
       {notificationsFiltered.map(
         (notification: NotificationModel, index: number) => (
-          <div
-            key={index}
-            className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8"
-          >
-            <NotificationContent notification={notification} mutate={mutate} />
-          </div>
+          <>
+            <div
+              key={index}
+              className="shadow-lg rounded-lg bg-white mx-auto p-4 notification-box max-w-md mt-8"
+            >
+              <NotificationContent
+                notification={notification}
+                mutate={mutate}
+              />
+              <div className="text-right mt-3">
+                {format(notification.updatedAt, 'yyyy年MM月dd日HH時mm分ss秒')}
+              </div>
+            </div>
+          </>
         )
       )}
     </main>

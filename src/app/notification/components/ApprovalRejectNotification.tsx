@@ -8,9 +8,13 @@ const ApprovalRejectNotification = ({
 }: {
   notification: NotificationModel;
 }) => {
-  console.log(notification);
   return (
-    <>
+    <div className="relative">
+      {!notification.readAt && (
+        <div className="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+          新着メッセージ
+        </div>
+      )}
       <div className="text-sm pb-2">
         <h1 className="text-xl font-bold text-center mb-4">応募結果</h1>
       </div>
@@ -23,16 +27,13 @@ const ApprovalRejectNotification = ({
         <br />
         {notification.jobs.applications[0].status && (
           <Link href={`/chat/${notification.jobs.chats[0].roomId}`}>
-            <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded">
+            <button className="bg-blue-500 text-white font-bold py-2 px-6 rounded mt-4">
               チャット画面へ
             </button>
           </Link>
         )}
       </p>
-      <div className="text-right mt-3">
-        {format(notification.updatedAt, 'yyyy年MM月dd日HH時mm分ss秒')}
-      </div>
-    </>
+    </div>
   );
 };
 
