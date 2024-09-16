@@ -39,7 +39,7 @@ const NotificationPage = () => {
                 mutate={mutate}
               />
               <div className="text-right mt-3">
-                {format(notification.updatedAt, 'yyyy年MM月dd日HH時mm分ss秒')}
+                {format(notification.createdAt, 'yyyy年MM月dd日HH時mm分ss秒')}
               </div>
             </div>
           </>
