@@ -21,15 +21,15 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
-export default function Example() {
-  // url取得する
-
+export default function ChatPage() {
   const router = useParams();
   const id = router.id as string;
   const { chats, isError, isLoading, mutate } = useGetChats(id);
   const { user } = useGetUser();
   const bottomRef = useRef<HTMLDivElement>(null);
+  const nextRouter = useRouter();
 
   const {
     register,
@@ -61,7 +61,15 @@ export default function Example() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, []);
 
-  if (isError) return <div>failed to load</div>;
+  useEffect(() => {
+    if (isError) {
+      // エラーが発生した場合（アクセス権がない場合など）、ホームページにリダイレクト
+      nextRouter.push('/');
+    }
+  }, [isError, nextRouter]);
+
+  if (isError) return null; // エラー時は何も表示せずにリダイレクト
+
   if (isLoading)
     return (
       <div className="flex justify-center" aria-label="読み込み中">
@@ -69,7 +77,6 @@ export default function Example() {
       </div>
     );
 
-  // return <div>hello {jobs.name}!</div>;
   if (!chats) return <>loading...</>;
   return (
     <div className="h-screen flex flex-col">
