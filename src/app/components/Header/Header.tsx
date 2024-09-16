@@ -141,13 +141,11 @@ const NotificationIcon = ({
   >
     <TbBell
       size="30"
-      fill={
-        unreadNotifications && unreadNotifications.length > 0 ? 'red' : 'gray'
-      }
+      fill={unreadNotifications.length > 0 ? 'red' : 'gray'}
     />
-    {unreadNotifications && unreadNotifications.length > 0 && (
-      <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
-        <FiAlertCircle size="14" />
+    {unreadNotifications.length > 0 && (
+      <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+        {unreadNotifications.length}
       </span>
     )}
   </Link>
