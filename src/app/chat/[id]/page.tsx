@@ -82,21 +82,24 @@ export default function ChatPage() {
     <div className="h-screen flex flex-col">
       <div className="bg-gray-200 flex-1 overflow-y-scroll pb-20">
         <div className="px-4 py-2">
-          {chats.data.map((chat: Chats, index: number) => (
-            <div key={chat.id}>
-              {chat.userId !== user?.id ? (
-                <div className="bg-white rounded-lg p-2 shadow mb-2 inline-block">
-                  {chat.text}
+          {chats.data.map(
+            (chat: Chats, index: number) =>
+              chat.text && (
+                <div key={chat.id}>
+                  {chat.userId !== user?.id ? (
+                    <div className="bg-white rounded-lg p-2 shadow mb-2 inline-block">
+                      {chat.text}
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-end">
+                      <div className="bg-blue-500 text-white rounded-lg p-2 shadow mr-2 inline-block">
+                        {chat.text}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="flex items-center justify-end">
-                  <div className="bg-blue-500 text-white rounded-lg p-2 shadow mr-2 inline-block">
-                    {chat.text}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+              )
+          )}
           <div ref={bottomRef}></div>
         </div>
       </div>
